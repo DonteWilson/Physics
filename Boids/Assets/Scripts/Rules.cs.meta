@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: c103b2c01cc72ab40b61c8fa6e934f91
+timeCreated: 1477431663
+licenseType: Pro
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - bprefab: {fileID: 1000013025934244, guid: fe21db205df216847b0afb169d7e3c16, type: 2}
+  - target: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -22,9 +22,8 @@ GameObject:
   - 33: {fileID: 33000012050806480}
   - 135: {fileID: 135000010423860842}
   - 23: {fileID: 23000011361004384}
-  - 114: {fileID: 114000011041742990}
-  - 114: {fileID: 114000012080627168}
-  - 114: {fileID: 114000012066202016}
+  - 114: {fileID: 114000010259861598}
+  - 114: {fileID: 114000011246860884}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -81,7 +80,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013025934244}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &114000011041742990
+--- !u!114 &114000010259861598
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -89,11 +88,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013025934244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3247cec842bb6794795a0dc1077a5e8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 5560857bae8d5b547bf3283af9a1b014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocity: {x: -0.59999937, y: -1.6000003, z: 0.9000005}
   mass: 50
---- !u!114 &114000012066202016
+--- !u!114 &114000011246860884
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -101,26 +101,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013025934244}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9c7087c5bb2ab44eabc291a4778df93, type: 3}
+  m_Script: {fileID: 11500000, guid: c103b2c01cc72ab40b61c8fa6e934f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 4000011527344514}
-  steeringF: 50
-  radius: 5
---- !u!114 &114000012080627168
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013025934244}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4358d674e3943904995ef3105761333f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  prefab: {fileID: 1000013025934244}
+  numBoid: 0
+  maxD: 500
+  boundaries: 2
   target: {fileID: 0}
-  steeringF: 50
-  radius: 5
+  mMax: 100
+  mMin: 50
+  cohesion: 0.44
+  dispersion: 0
+  alignment: 0.34
 --- !u!135 &135000010423860842
 SphereCollider:
   m_ObjectHideFlags: 1
