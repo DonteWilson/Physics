@@ -90,7 +90,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &936458916 stripped
+--- !u!4 &277612711 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4000013088293002, guid: 0a87e10c1aad3334991d695a879d1c53,
     type: 2}
@@ -284,32 +284,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114000012080627168, guid: fe21db205df216847b0afb169d7e3c16,
-        type: 2}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 936458916}
-    - target: {fileID: 114000011246860884, guid: fe21db205df216847b0afb169d7e3c16,
-        type: 2}
-      propertyPath: prefab
-      value: 
-      objectReference: {fileID: 1000013025934244, guid: fe21db205df216847b0afb169d7e3c16,
-        type: 2}
-    - target: {fileID: 114000011246860884, guid: fe21db205df216847b0afb169d7e3c16,
-        type: 2}
-      propertyPath: maxD
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 114000011246860884, guid: fe21db205df216847b0afb169d7e3c16,
-        type: 2}
-      propertyPath: numBoid
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 114000011246860884, guid: fe21db205df216847b0afb169d7e3c16,
         type: 2}
       propertyPath: target
       value: 
-      objectReference: {fileID: 936458916}
+      objectReference: {fileID: 277612711}
+    - target: {fileID: 114000011246860884, guid: fe21db205df216847b0afb169d7e3c16,
+        type: 2}
+      propertyPath: center
+      value: 
+      objectReference: {fileID: 277612711}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: fe21db205df216847b0afb169d7e3c16, type: 2}
   m_IsPrefabParent: 0

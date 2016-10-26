@@ -10,20 +10,28 @@ public class Rules : MonoBehaviour {
     public float maxD;
     public float boundaries;
     public Transform target;
+    public Transform center;
+    public float tRange;
 
     public float mMax;
     public float mMin;
 
     
 
-    [Range(0.0f, 1.0f)]
+    [Range(0, 2)]
     public float cohesion;
 
-    [Range(0.0f, 1.0f)]
+    [Range(0, 2)]
     public float dispersion;
 
-    [Range(0.0f, 1.0f)]
+    [Range(0, 2)]
     public float alignment;
+
+    [Range(-1,2)]
+    public float tendency;
+
+    [Range(0, 2)]
+    public float lim;
 
     public void CV(Vector3 vec)
     {
@@ -34,6 +42,7 @@ public class Rules : MonoBehaviour {
 
     public void Start()
     {
+ 
         boids = new List<BB>();
         Vector3 pos = Vector3.zero;
         for(int i = 0; i < numBoid; i++)
@@ -60,44 +69,45 @@ public class Rules : MonoBehaviour {
         //}
     }
 
-    private void FixedUpdate()
+    public void FixedUpdate()
     {
         foreach (BB bb in boids)
         {
-            Vector3 r1 = COM(bb) * cohesion;
+            Vector3 r1 = Cohesion(bb) * cohesion;
             Vector3 r2 = Dispersion(bb) * dispersion;
             Vector3 r3 = Alignment(bb) * alignment;
             Vector3 bound = BoundPosition(bb);
+            //Vector3 tend = Tendacy(bb) * tendency;
             bb.velocity += (r1 + r2 + r3 + bound) / bb.mass;
 
         }
+
+        //center.position = SetCenter();
     }
 
     //Rule 1 Center of Mass
-    private Vector3 COM(BB b)
+    public Vector3 Cohesion(BB b)
     {
         Vector3 pc = Vector3.zero;
-        float totalMass = 0;
         foreach (BB bj in boids)
         {
             if(bj != b)
             {
-                pc += bj.transform.position * bj.mass;
-                totalMass += bj.mass;
+                pc += bj.transform.position; 
             }
         }
 
-        pc = pc / totalMass;
+        pc = pc / (boids.Count - 1);
 
        return (pc - b.transform.position).normalized;
     }
     //Rule 2 Dispersion
-    private Vector3 Dispersion(BB b)
+    public Vector3 Dispersion(BB b)
     {
         Vector3 avoid = Vector3.zero;
         foreach(BB bj in boids)
         {
-            if((bj.transform.position - b.transform.position).magnitude <= 50 && bj != b)
+            if((bj.transform.position - b.transform.position).magnitude <= 20 && bj != b)
             {
                 avoid -= bj.transform.position - b.transform.position;
             }
@@ -105,7 +115,7 @@ public class Rules : MonoBehaviour {
         return avoid.normalized;
     }
 
-    private Vector3 Alignment(BB b)
+    public Vector3 Alignment(BB b)
     {
         Vector3 pv = Vector3.zero;
         foreach(BB bj in boids)
@@ -116,35 +126,61 @@ public class Rules : MonoBehaviour {
         pv = pv / (boids.Count - 1);
         Vector3 rule3 = (pv - b.velocity).normalized;
 
-        CV(rule3);
 
         return rule3;
 
         
     }
 
-    private Vector3 BoundPosition(BB b)
+    public Vector3 BoundPosition(BB b)
     {
         Vector3 BPos = new Vector3();
 
         if (b.transform.position.x > boundaries)
-            BPos += new Vector3(-5, 0, 0);
+            BPos += new Vector3(-10, 0, 0);
         else if (b.transform.position.x < -boundaries)
-            BPos += new Vector3(5, 0, 0);
+            BPos += new Vector3(10, 0, 0);
 
         if (b.transform.position.y > boundaries)
-            BPos += new Vector3(0, -5, 0);
+            BPos += new Vector3(0, -10, 0);
         else if (b.transform.position.y < -boundaries)
-            BPos += new Vector3(0, 5, 0);
+            BPos += new Vector3(0, 10, 0);
 
         if (b.transform.position.z > boundaries)
-            BPos += new Vector3(0, 0, -5);
+            BPos += new Vector3(0, 0, -10);
         else if (b.transform.position.z < -boundaries)
-            BPos += new Vector3(0, 0, 5);
+            BPos += new Vector3(0, 0, 10);
         
 
 
         return BPos;
     }
 
+    public Vector3 SetCenter()
+    {
+        Vector3 centermass = Vector3.zero;
+        Vector3 positions = Vector3.zero;
+        foreach (BB bb in boids)
+        {
+            positions += bb.transform.position;
+        }
+
+        centermass = positions / boids.Count;
+        return centermass;
+    }
+
+    public Vector3 Tendacy(BB bb)
+    {
+        Vector3 place = transform.position;
+        return (place - bb.transform.position/10).normalized;
+
+    }
+
+    public void Limit(BB bb)
+    {
+        if (bb.velocity.magnitude > lim)
+        {
+            bb.velocity = (bb.velocity / (bb.velocity.magnitude) * lim).normalized;
+        }
+    }
 }

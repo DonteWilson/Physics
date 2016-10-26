@@ -104,16 +104,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c103b2c01cc72ab40b61c8fa6e934f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boids: []
   prefab: {fileID: 1000013025934244}
   numBoid: 0
-  maxD: 500
-  boundaries: 2
+  maxD: 50
+  boundaries: 5
   target: {fileID: 0}
-  mMax: 100
+  center: {fileID: 0}
+  tRange: 0
+  mMax: 50
   mMin: 50
-  cohesion: 0.44
-  dispersion: 0
-  alignment: 0.34
+  cohesion: 1
+  dispersion: 0.354
+  alignment: 0.097
+  tendency: 0
+  lim: 1.29
 --- !u!135 &135000010423860842
 SphereCollider:
   m_ObjectHideFlags: 1
