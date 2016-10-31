@@ -18,19 +18,19 @@ public class Rules : MonoBehaviour {
 
     
 
-    [Range(0, 2)]
+    [Range(0.0f, 1.0f)]
     public float cohesion;
 
-    [Range(0, 2)]
+    [Range(0.0f, 1.0f)]
     public float dispersion;
 
-    [Range(0, 2)]
+    [Range(0.0f, 1.0f)]
     public float alignment;
 
-    [Range(-1,2)]
+    [Range(-1.0f,1.0f)]
     public float tendency;
 
-    [Range(0, 2)]
+    [Range(0.0f, 2.0f)]
     public float lim;
 
     public void CV(Vector3 vec)
@@ -40,7 +40,7 @@ public class Rules : MonoBehaviour {
         vec.z = Mathf.Clamp(vec.z, 0, 1);
     }
 
-    public void Start()
+    public void Awake()
     {
  
         boids = new List<BB>();
@@ -51,7 +51,7 @@ public class Rules : MonoBehaviour {
             pos.y = Random.Range(-maxD, maxD);
             pos.z = Random.Range(-maxD, maxD);
 
-            GameObject temp = Instantiate(prefab, pos, new Quaternion()) as GameObject;
+            GameObject temp = Instantiate(prefab, transform.position + pos, new Quaternion()) as GameObject;
 
             BB bb = temp.GetComponent<BB>();
             bb.velocity = bb.transform.position.normalized;
@@ -61,12 +61,6 @@ public class Rules : MonoBehaviour {
 
             boids.Add(bb);
         }
-
-        //foreach (BB bb in FindObjectsOfType<BB>())
-        //{
-        //    if (boids.Contains(bb) == false)
-        //        boids.Add(bb);
-        //}
     }
 
     public void FixedUpdate()
@@ -74,11 +68,12 @@ public class Rules : MonoBehaviour {
         foreach (BB bb in boids)
         {
             Vector3 r1 = Cohesion(bb) * cohesion;
-            Vector3 r2 = Dispersion(bb) * dispersion;
+            Vector3 r2 = Dispersion(bb);
             Vector3 r3 = Alignment(bb) * alignment;
             Vector3 bound = BoundPosition(bb);
-            //Vector3 tend = Tendacy(bb) * tendency;
+             //Vector3 tend = Tendacy(bb) * tendency;
             bb.velocity += (r1 + r2 + r3 + bound) / bb.mass;
+            Limit(bb);
 
         }
 
@@ -107,7 +102,7 @@ public class Rules : MonoBehaviour {
         Vector3 avoid = Vector3.zero;
         foreach(BB bj in boids)
         {
-            if((bj.transform.position - b.transform.position).magnitude <= 20 && bj != b)
+            if((bj.transform.position - b.transform.position).magnitude <= 20 * dispersion && bj != b)
             {
                 avoid -= bj.transform.position - b.transform.position;
             }
@@ -169,12 +164,12 @@ public class Rules : MonoBehaviour {
         return centermass;
     }
 
-    public Vector3 Tendacy(BB bb)
-    {
-        Vector3 place = transform.position;
-        return (place - bb.transform.position/10).normalized;
+    //public Vector3 Tendacy(BB bb)
+    //{
+    //    Vector3 place = transform.position;
+    //    return (place - bb.transform.position/10).normalized;
 
-    }
+    //}
 
     public void Limit(BB bb)
     {
