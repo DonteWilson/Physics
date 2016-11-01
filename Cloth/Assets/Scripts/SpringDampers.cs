@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpringDamper : MonoBehaviour
+public class SpringDampers : MonoBehaviour
 {
     public float RestLength; //rest length
 
@@ -10,7 +10,7 @@ public class SpringDamper : MonoBehaviour
 
     public LineRenderer spring;
 
-   
+
     //Spawn Springs function in Cloth Behaviour class
     public void MakeSpring(Node a, Node b, float dis)
     {
