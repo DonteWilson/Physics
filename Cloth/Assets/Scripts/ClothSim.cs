@@ -7,25 +7,70 @@ public class ClothSim : MonoBehaviour
     GameObject Sphere1, Sphere2;
     List<Particles> particles;
     List<SpringDamper> springDampers;
+    List<GameObject> gameObjects;
+    List<AeroD> aeroDynamics;
+  
+    public LineRenderer spring;
+    [Range(0.0f, 5)]
     public float Ks, Kd, Lo;
+    public float Gravity = 5f;
+    [Range(0.0f, 5f)]
+    public int height;
+    [Range(0.0f, 5)]
+    public int width;
+    [Range(0.0f, 5)]
+    public float slider = 0;
     void Start()
     {
         particles = new List<Particles>();
         springDampers = new List<SpringDamper>();
-        Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        Particles p1 = new Particles(Vector3.zero, Vector3.zero, 1f);
-        p1.Kinematic = true;
+        gameObjects = new List<GameObject>();
+        aeroDynamics = new List<AeroD>();
 
-        Particles p2 = new Particles(Vector3.down, Vector3.zero, 1f);
+        for(int y = 0; y < height; ++y)
+        {
+            for(int x = 0; x < width; ++x)
+            {
+                GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
-        particles.Add(p1);
-        particles.Add(p2);
+                Particles p = new Particles(new Vector3(x * 5, -y, 0), Vector3.zero, 1f);
+                go.transform.position = p.Position;
+                gameObjects.Add(go);
+                go.name = "Particle::" + (gameObjects.Count - 1).ToString();
+                particles.Add(p);
+            }
+        }
 
-        SpringDamper sd = new SpringDamper(p1, p2, Ks, Kd, Lo);
-        springDampers.Add(sd);   
+        for (int i = 0; i < particles.Count; ++i)
+        {
+            if(i % (width) != width -1)
+            {
+                SpringDamper sdRight = new SpringDamper(particles[i], particles[i + 1], Ks, Kd, Lo);
+                springDampers.Add(sdRight);
+            }
+            if(i < (particles.Count - height))
+            {
+                SpringDamper sdDown = new SpringDamper(particles[i], particles[i + height], Ks, Kd, Lo);
+                springDampers.Add(sdDown);
+            }
+        }
+
+        particles[0].Kinematic = true;
+        particles[width - 1].Kinematic = true;
+        //Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //Particles p1 = new Particles(Vector3.zero, Vector3.zero, 1f);
+        //p1.Kinematic = true;
+
+        //Particles p2 = new Particles(Vector3.down, Vector3.zero, 1f);
+
+        //particles.Add(p1);
+        //particles.Add(p2);
+
+        //SpringDamper sd = new SpringDamper(p1, p2, Ks, Kd, Lo);
+        //springDampers.Add(sd);   
     }
-    public float slider = 0;
+  
     void Update()
     {
         particles[0].Position = new Vector3(slider, 0, 0);
@@ -41,19 +86,24 @@ public class ClothSim : MonoBehaviour
     {
         foreach (Particles p in particles)
         {
-            p.Force = Vector3.down * p.Mass;
+            p.Force = Vector3.down * Gravity * p.Mass;
+           
         }
 
         foreach (SpringDamper sd in springDampers)
         {
             sd.ComputeForce();
+            //spring.SetPosition(0,  )
+            sd.Draw();
         }
     }
 
     void LateUpdate()
     {
-        Sphere1.transform.position = particles[0].Position;
-        Sphere2.transform.position = particles[1].Position;
+       for(int i = 0; i < particles.Count; ++i)
+        {
+            gameObjects[i].transform.position = particles[i].Position;
+        }
 
         foreach (Particles p in particles)
         {

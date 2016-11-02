@@ -8,6 +8,9 @@ public class Particles {
     {
 
     }
+
+
+    
     public Particles(Vector3 p, Vector3 v, float mass)
     {
         m_Position = p;
@@ -65,7 +68,7 @@ public class Particles {
 }
 public class SpringDamper
 {   
-    Particles p1, p2;
+    public Particles p1, p2, p3;
     public float Ks;
     public float Kd;
     public float Lo;
@@ -95,6 +98,15 @@ public class SpringDamper
         p1.AddForce(SpringForce);
         p2.AddForce(-SpringForce);
 
+    }
+    
+    public LineRenderer spring;
+    public void Draw()
+    {
+        //spring.SetPosition(0, p1.Position);
+        //spring.SetPosition(1, p2.Position);
+        Debug.DrawLine(p1.Position, p2.Position, Color.cyan);
+       
     }
 }
 
