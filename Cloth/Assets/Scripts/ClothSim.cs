@@ -8,7 +8,8 @@ public class ClothSim : MonoBehaviour
     List<Particles> particles;
     List<SpringDamper> springDampers;
     List<GameObject> gameObjects;
-    List<AeroD> aeroDynamics;
+    List<Triangle> aeroDynamics;
+    public bool wind;
   
     public LineRenderer spring;
     [Range(0.0f, 5)]
@@ -20,12 +21,14 @@ public class ClothSim : MonoBehaviour
     public int width;
     [Range(0.0f, 5)]
     public float slider = 0;
+    [Range(0.01f, 10f)]
+    public float windz;
     void Start()
     {
         particles = new List<Particles>();
         springDampers = new List<SpringDamper>();
         gameObjects = new List<GameObject>();
-        aeroDynamics = new List<AeroD>();
+        aeroDynamics = new List<Triangle>();
 
         for(int y = 0; y < height; ++y)
         {
@@ -89,12 +92,31 @@ public class ClothSim : MonoBehaviour
             p.Force = Vector3.down * Gravity * p.Mass;
            
         }
+        foreach (Triangle t in aeroDynamics)
+        {
+            aeroDynamics.Add(t);
+        }
 
         foreach (SpringDamper sd in springDampers)
         {
             sd.ComputeForce();
             //spring.SetPosition(0,  )
             sd.Draw();
+        }
+
+        foreach (Triangle t in aeroDynamics)
+        {
+            if(wind)
+            {
+                if(!springDampers.Contains(t.D1) || !springDampers.Contains(t.D2) || !springDampers.Contains(t.D3))
+                {
+                    aeroDynamics.Remove(t);
+                }
+                else
+                {
+                    t.ComputeAD(Vector3.forward * windz);
+                }
+            }
         }
     }
 

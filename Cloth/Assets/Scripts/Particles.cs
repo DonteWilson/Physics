@@ -67,7 +67,7 @@ public class Particles {
     }
 }
 public class SpringDamper
-{   
+{
     public Particles p1, p2, p3;
     public float Ks;
     public float Kd;
@@ -99,15 +99,52 @@ public class SpringDamper
         p2.AddForce(-SpringForce);
 
     }
-    
-    public LineRenderer spring;
+
     public void Draw()
     {
         //spring.SetPosition(0, p1.Position);
         //spring.SetPosition(1, p2.Position);
         Debug.DrawLine(p1.Position, p2.Position, Color.cyan);
-       
+
     }
 }
+
+public class Triangle
+{
+    public Vector3 surfnorm;
+    public Vector3 averageV;
+    public float areaTri;
+    public float windCoeff = 1f;
+    public Particles P1, P2, P3;
+    public SpringDamper D1, D2, D3;
+
+    public Triangle() { }
+
+    public Triangle(Particles pOne, Particles pTwo, Particles pThree)
+    {
+        P1 = pOne;
+        P2 = pTwo;
+        P3 = pThree;
+    }
+
+    public void ComputeAD(Vector3 air)
+    {
+        Vector3 surface = ((P1.Velocity + P2.Velocity + P3.Velocity) / 3);
+        averageV = surface - air;
+        surfnorm = Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)) /
+        Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
+        float ao = (1f / 2f) * Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
+        areaTri = ao * (Vector3.Dot(averageV, surfnorm) / averageV.magnitude);
+        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(averageV.magnitude, 2) * 1f * areaTri * surfnorm;
+        P1.AddForce(aeroForce / 3);
+        P2.AddForce(aeroForce / 3);
+        P3.AddForce(aeroForce / 3);
+
+        
+    }
+}
+   
+  
+
 
    
