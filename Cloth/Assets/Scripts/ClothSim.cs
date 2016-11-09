@@ -95,6 +95,7 @@ public class ClothSim : MonoBehaviour
         foreach (Triangle t in aeroDynamics)
         {
             aeroDynamics.Add(t);
+            //t.Draw();
         }
 
         foreach (SpringDamper sd in springDampers)
@@ -115,6 +116,7 @@ public class ClothSim : MonoBehaviour
                 else
                 {
                     t.ComputeAD(Vector3.forward * windz);
+                    
                 }
             }
         }

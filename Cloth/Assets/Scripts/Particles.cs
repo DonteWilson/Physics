@@ -63,7 +63,7 @@ public class Particles {
             return;
         m_Acceleration = (1f / m_mass) * Force;
         m_Velocity += m_Acceleration * Time.fixedDeltaTime;
-        m_Position += m_Velocity * Time.fixedDeltaTime;
+        m_Position += Vector3.ClampMagnitude(m_Velocity, 5) + m_Velocity * Time.fixedDeltaTime;
     }
 }
 public class SpringDamper
@@ -105,6 +105,7 @@ public class SpringDamper
         //spring.SetPosition(0, p1.Position);
         //spring.SetPosition(1, p2.Position);
         Debug.DrawLine(p1.Position, p2.Position, Color.cyan);
+       
 
     }
 }
@@ -141,6 +142,11 @@ public class Triangle
         P3.AddForce(aeroForce / 3);
 
         
+    }
+
+    public void Draw()
+    {
+        Debug.DrawLine(P3.Position, P1.Position, Color.cyan);
     }
 }
    
