@@ -62,7 +62,8 @@ public class Particles {
         if (Kinematic)
             return;
         m_Acceleration = (1f / m_mass) * Force;
-        m_Velocity += m_Acceleration * Time.fixedDeltaTime;
+        m_Velocity +=  m_Acceleration * Time.fixedDeltaTime;
+        m_Velocity = Vector3.ClampMagnitude(m_Velocity, 3.0f);
         m_Position += m_Velocity * Time.fixedDeltaTime;
     }
 }

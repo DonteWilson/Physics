@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ClothSim : MonoBehaviour
 {
@@ -12,18 +14,27 @@ public class ClothSim : MonoBehaviour
     public bool wind;
   
     public LineRenderer spring;
+    [SerializeField]
     [Range(0.0f, 5)]
     public float Ks, Kd, Lo;
     public float Gravity = 5f;
+
     [Range(0.0f, 5f)]
     public int height;
+
     [Range(0.0f, 5)]
     public int width;
+
     [Range(0.0f, 5)]
     public float slider = 0;
+
     [Range(0.01f, 10f)]
     public float windz;
-    void Start()
+
+    public Slider KS;
+    public Slider KD;
+    public Slider LO;
+    public void Start()
     {
         particles = new List<Particles>();
         springDampers = new List<SpringDamper>();
@@ -60,6 +71,9 @@ public class ClothSim : MonoBehaviour
 
         particles[0].Kinematic = true;
         particles[width - 1].Kinematic = true;
+
+        
+
         //Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         //Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         //Particles p1 = new Particles(Vector3.zero, Vector3.zero, 1f);
@@ -71,10 +85,10 @@ public class ClothSim : MonoBehaviour
         //particles.Add(p2);
 
         //SpringDamper sd = new SpringDamper(p1, p2, Ks, Kd, Lo);
-        //springDampers.Add(sd);   
+        //springDampers.Add(sd);
     }
   
-    void Update()
+    public void Update()
     {
         particles[0].Position = new Vector3(slider, 0, 0);
         foreach(SpringDamper sd in springDampers)
@@ -82,10 +96,16 @@ public class ClothSim : MonoBehaviour
             sd.Lo = Lo;
             sd.Ks = Ks;
             sd.Kd = Kd;
+
+            //Ks = KS.value;
+            //Kd = KD.value;
+            //Lo = LO.value;
         }
+
+      
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         foreach (Particles p in particles)
         {
@@ -122,7 +142,7 @@ public class ClothSim : MonoBehaviour
         }
     }
 
-    void LateUpdate()
+    public void LateUpdate()
     {
        for(int i = 0; i < particles.Count; ++i)
         {
@@ -133,6 +153,25 @@ public class ClothSim : MonoBehaviour
         {
             p.Update();
         }
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
+        
+    }
+
+    public void SetSliders()
+    {
+       
+        KS.value = 5f;
+        KD.value = 5f;
+        LO.value = 5f;
+
+        
+        Ks = KS.value;
+        Kd = KD.value;
+        Lo = LO.value;
     }
 }
 
