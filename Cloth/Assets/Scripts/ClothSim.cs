@@ -15,8 +15,13 @@ public class ClothSim : MonoBehaviour
   
     public LineRenderer spring;
     [SerializeField]
-    [Range(0.0f, 5)]
-    public float Ks, Kd, Lo;
+    [Range(0.0f, 10)]
+    public float Ks;
+    [Range(0.0f,10)]
+    public float Kd;
+    [Range(0.0f,10)]
+    public float Lo;
+
     public float Gravity = 5f;
 
     [Range(0.0f, 5f)]
@@ -72,7 +77,28 @@ public class ClothSim : MonoBehaviour
         particles[0].Kinematic = true;
         particles[width - 1].Kinematic = true;
 
-        
+        //for(int i = 0; i < width * height;i++)
+        //{
+        //    if (i % width != width - 1)
+        //    {
+        //        if (i < (height * width) - width)
+        //        {
+        //            Triangle t = new Triangle(particles[i], particles[i + 1], particles[i + width]);
+        //            aeroDynamics.Add(t);
+        //        }
+        //    }
+
+        //    if (i % width != 0)
+        //    {
+        //        if (i < (height * width) - width)
+        //        {
+        //            Triangle t = new Triangle(particles[i], particles[i + width], particles[i + width - 1]);
+        //            aeroDynamics.Add(t);
+        //        }
+        //    }
+        //}
+
+     
 
         //Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         //Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -97,9 +123,9 @@ public class ClothSim : MonoBehaviour
             sd.Ks = Ks;
             sd.Kd = Kd;
 
-            //Ks = KS.value;
-            //Kd = KD.value;
-            //Lo = LO.value;
+            Ks = KS.value;
+            Kd = KD.value;
+            Lo = LO.value;
         }
 
       
@@ -164,9 +190,9 @@ public class ClothSim : MonoBehaviour
     public void SetSliders()
     {
        
-        KS.value = 5f;
-        KD.value = 5f;
-        LO.value = 5f;
+        KS.value = 10f;
+        KD.value = 10f;
+        LO.value = 10f;
 
         
         Ks = KS.value;

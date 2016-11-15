@@ -21,7 +21,7 @@ public class Mouse : MonoBehaviour {
     {
         if(Input.GetMouseButtonDown(0))
         {
-            if(ShootRay() != null && ShootRay().GetComponent<Particles>() != null)
+            if(ShootRay() != null && ShootRay().GetComponent<GameObject>() != null)
             {
                 current = ShootRay();
                
@@ -36,7 +36,7 @@ public class Mouse : MonoBehaviour {
 
     public void LateUpdate()
     {
-        if(Input.GetMouseButtonDown(1) && ShootRay().GetComponent<Particles>() != null)
+        if(Input.GetMouseButtonDown(1) && ShootRay().GetComponent<GameObject>() != null)
         {
             current = ShootRay();
         }
