@@ -10,7 +10,7 @@ public class ClothSim : MonoBehaviour
     List<Particles> particles;
     List<SpringDamper> springDampers;
     List<GameObject> gameObjects;
-    List<Triangle> aeroDynamics;
+    public List<Triangle> aeroDynamics;
     public bool wind;
   
     public LineRenderer spring;
@@ -77,28 +77,28 @@ public class ClothSim : MonoBehaviour
         particles[0].Kinematic = true;
         particles[width - 1].Kinematic = true;
 
-        //for(int i = 0; i < width * height;i++)
-        //{
-        //    if (i % width != width - 1)
-        //    {
-        //        if (i < (height * width) - width)
-        //        {
-        //            Triangle t = new Triangle(particles[i], particles[i + 1], particles[i + width]);
-        //            aeroDynamics.Add(t);
-        //        }
-        //    }
+        for (int i = 0; i < width * height; i++)
+        {
+            if (i % width != width - 1)
+            {
+                if (i < (height * width) - width)
+                {
+                    Triangle t = new Triangle(particles[i], particles[i + 1], particles[i + width]);
+                    aeroDynamics.Add(t);
+                }
+            }
 
-        //    if (i % width != 0)
-        //    {
-        //        if (i < (height * width) - width)
-        //        {
-        //            Triangle t = new Triangle(particles[i], particles[i + width], particles[i + width - 1]);
-        //            aeroDynamics.Add(t);
-        //        }
-        //    }
-        //}
+            if (i % width != 0)
+            {
+                if (i < (height * width) - width)
+                {
+                    Triangle t = new Triangle(particles[i], particles[i + width], particles[i + width - 1]);
+                    aeroDynamics.Add(t);
+                }
+            }
+        }
 
-     
+
 
         //Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         //Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -119,13 +119,13 @@ public class ClothSim : MonoBehaviour
         particles[0].Position = new Vector3(slider, 0, 0);
         foreach(SpringDamper sd in springDampers)
         {
-            sd.Lo = Lo;
-            sd.Ks = Ks;
-            sd.Kd = Kd;
-
             Ks = KS.value;
             Kd = KD.value;
             Lo = LO.value;
+
+            sd.Lo = Lo;
+            sd.Ks = Ks;
+            sd.Kd = Kd;
         }
 
       
@@ -138,16 +138,15 @@ public class ClothSim : MonoBehaviour
             p.Force = Vector3.down * Gravity * p.Mass;
            
         }
-        foreach (Triangle t in aeroDynamics)
-        {
-            aeroDynamics.Add(t);
-            //t.Draw();
-        }
+        //foreach (Triangle t in aeroDynamics)
+        //{
+        //    //aeroDynamics.Add(t);
+        //    //t.Draw();
+        //}
 
         foreach (SpringDamper sd in springDampers)
         {
             sd.ComputeForce();
-            //spring.SetPosition(0,  )
             sd.Draw();
         }
 
@@ -157,7 +156,7 @@ public class ClothSim : MonoBehaviour
             {
                 if(!springDampers.Contains(t.D1) || !springDampers.Contains(t.D2) || !springDampers.Contains(t.D3))
                 {
-                    aeroDynamics.Remove(t);
+                    //aeroDynamics.Remove(t);
                 }
                 else
                 {

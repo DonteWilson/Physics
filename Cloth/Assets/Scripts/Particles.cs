@@ -111,6 +111,7 @@ public class SpringDamper
     }
 }
 
+[Serializable]
 public class Triangle
 {
     public Vector3 surfnorm;
