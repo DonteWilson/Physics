@@ -10,10 +10,11 @@ public class ClothSim : MonoBehaviour
     List<Particles> particles;
     List<SpringDamper> springDampers;
     List<GameObject> gameObjects;
+    public List<LineRenderer> lineRenderer;
     public List<Triangle> aeroDynamics;
     public bool wind;
   
-    public LineRenderer spring;
+   
     [SerializeField]
     [Range(2f, 10)]
     public float Ks;
@@ -39,6 +40,12 @@ public class ClothSim : MonoBehaviour
     public Slider KS;
     public Slider KD;
     public Slider LO;
+    //order would be to make a new Object()
+    //instantiate the gameObject that will represent it in the scene
+    //do the math to the Object in the game aka: update it
+    //update the gameObject with the new Object information
+    
+
     public void Start()
     {
         //Renews each list
@@ -46,6 +53,7 @@ public class ClothSim : MonoBehaviour
         springDampers = new List<SpringDamper>();
         gameObjects = new List<GameObject>();
         aeroDynamics = new List<Triangle>();
+        lineRenderer = new List<LineRenderer>();
 
         for(int y = 0; y < height; ++y)
         {
@@ -106,6 +114,11 @@ public class ClothSim : MonoBehaviour
         particles[0].Position = new Vector3(slider, 0, 0);
         foreach(SpringDamper sd in springDampers)
         {
+
+            LineRenderer line = new LineRenderer();
+           
+            lineRenderer.Add(line);
+          
             Ks = KS.value;
             Kd = KD.value;
             Lo = LO.value;
