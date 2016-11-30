@@ -15,11 +15,11 @@ public class ClothSim : MonoBehaviour
   
     public LineRenderer spring;
     [SerializeField]
-    [Range(0.0f, 10)]
+    [Range(2f, 10)]
     public float Ks;
-    [Range(0.0f,10)]
+    [Range(2f,10)]
     public float Kd;
-    [Range(0.0f,10)]
+    [Range(2f,10)]
     public float Lo;
 
     public float Gravity = 5f;
@@ -41,6 +41,7 @@ public class ClothSim : MonoBehaviour
     public Slider LO;
     public void Start()
     {
+        //Renews each list
         particles = new List<Particles>();
         springDampers = new List<SpringDamper>();
         gameObjects = new List<GameObject>();
@@ -98,20 +99,6 @@ public class ClothSim : MonoBehaviour
             }
         }
 
-
-
-        //Sphere1 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //Sphere2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        //Particles p1 = new Particles(Vector3.zero, Vector3.zero, 1f);
-        //p1.Kinematic = true;
-
-        //Particles p2 = new Particles(Vector3.down, Vector3.zero, 1f);
-
-        //particles.Add(p1);
-        //particles.Add(p2);
-
-        //SpringDamper sd = new SpringDamper(p1, p2, Ks, Kd, Lo);
-        //springDampers.Add(sd);
     }
   
     public void Update()
@@ -152,7 +139,8 @@ public class ClothSim : MonoBehaviour
 
         foreach (Triangle t in aeroDynamics)
         {
-            if(wind)
+            t.ComputeAD(Vector3.forward * windz);
+            if (wind)
             {
                 if(!springDampers.Contains(t.D1) || !springDampers.Contains(t.D2) || !springDampers.Contains(t.D3))
                 {
