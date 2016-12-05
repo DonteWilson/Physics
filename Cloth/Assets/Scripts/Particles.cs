@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using System;
 
 [Serializable]
-public class Particles {
-    Particles()
+public class Particle {
+    Particle()
     {
 
     }
 
 
     
-    public Particles(Vector3 p, Vector3 v, float mass)
+    public Particle(Vector3 p, Vector3 v, float mass)
     {
         m_Position = p;
         m_Velocity = v;
@@ -69,11 +70,14 @@ public class Particles {
 }
 public class SpringDamper
 {
-    public Particles p1, p2, p3;
+    public Particle p1, p2, p3;
     public float Ks;
     public float Kd;
     public float Lo;
-    public SpringDamper(Particles P1, Particles P2, float SpringK, float SpringD, float SpringR)
+    
+  
+
+    public SpringDamper(Particle P1, Particle P2, float SpringK, float SpringD, float SpringR)
     {
         Ks = SpringK;
         Kd = SpringD;
@@ -101,14 +105,6 @@ public class SpringDamper
 
     }
 
-    public void Draw()
-    {
-        //spring.SetPosition(0, p1.Position);
-        //spring.SetPosition(1, p2.Position);
-        Debug.DrawLine(p1.Position, p2.Position, Color.cyan);
-       
-
-    }
 }
 
 [Serializable]
@@ -118,12 +114,12 @@ public class Triangle
     public Vector3 averageV;
     public float areaTri;
     public float windCoeff = 1f;
-    public Particles P1, P2, P3;
+    public Particle P1, P2, P3;
     public SpringDamper D1, D2, D3;
 
     public Triangle() { }
 
-    public Triangle(Particles pOne, Particles pTwo, Particles pThree)
+    public Triangle(Particle pOne, Particle pTwo, Particle pThree)
     {
         P1 = pOne;
         P2 = pTwo;
@@ -146,10 +142,11 @@ public class Triangle
         
     }
 
-    public void Draw()
-    {
-        Debug.DrawLine(P3.Position, P1.Position, Color.cyan);
-    }
+    //public void Draw()
+    //{
+     
+    //    Debug.DrawLine(P3.Position, P1.Position, Color.cyan);
+    //}
 }
    
   

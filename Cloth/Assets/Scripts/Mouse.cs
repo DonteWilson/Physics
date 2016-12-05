@@ -42,14 +42,14 @@ public class Mouse : MonoBehaviour {
         }
         if (Input.GetMouseButton(1) && current != null)
         {
-            current.GetComponent<Particles>().Force = Vector3.zero;
-            current.GetComponent<Particles>().Velocity = Vector3.zero;
+            current.GetComponent<Particle>().Force = Vector3.zero;
+            current.GetComponent<Particle>().Velocity = Vector3.zero;
 
             Vector3 mouse = Input.mousePosition;
             mouse.z = -Camera.main.transform.position.z;
             Vector3 worldPos = Camera.main.ScreenToWorldPoint(mouse);
             worldPos.z = current.transform.position.z;
-            current.GetComponent<Particles>().Position = worldPos;
+            current.GetComponent<Particle>().Position = worldPos;
             current.transform.position = worldPos;
         }
     }

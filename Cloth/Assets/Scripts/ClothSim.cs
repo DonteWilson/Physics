@@ -7,14 +7,17 @@ using UnityEngine.SceneManagement;
 public class ClothSim : MonoBehaviour
 {
     GameObject Sphere1, Sphere2;
-    List<Particles> particles;
+    List<Particle> particles;
     List<SpringDamper> springDampers;
     List<GameObject> gameObjects;
-    public List<LineRenderer> lineRenderer;
+    public List<LineRenderer> lineRenderers;
     public List<Triangle> aeroDynamics;
     public bool wind;
-  
+
+    public GameObject linePrefab;
    
+
+
     [SerializeField]
     [Range(2f, 10)]
     public float Ks;
@@ -34,12 +37,14 @@ public class ClothSim : MonoBehaviour
     [Range(0.0f, 5)]
     public float slider = 0;
 
-    [Range(0.01f, 10f)]
+    [Range(2f, 10f)]
     public float windz;
 
     public Slider KS;
     public Slider KD;
     public Slider LO;
+    public Slider Wind;
+    
     //order would be to make a new Object()
     //instantiate the gameObject that will represent it in the scene
     //do the math to the Object in the game aka: update it
@@ -49,22 +54,26 @@ public class ClothSim : MonoBehaviour
     public void Start()
     {
         //Renews each list
-        particles = new List<Particles>();
+        particles = new List<Particle>();
         springDampers = new List<SpringDamper>();
         gameObjects = new List<GameObject>();
         aeroDynamics = new List<Triangle>();
-        lineRenderer = new List<LineRenderer>();
+        
+//        LineRenderer line = gameObject.AddComponent<LineRenderer>();
 
-        for(int y = 0; y < height; ++y)
+
+        for (int y = 0; y < height; ++y)
         {
             for(int x = 0; x < width; ++x)
             {
                 GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-                Particles p = new Particles(new Vector3(x * 5, -y, 0), Vector3.zero, 1f);
+                
+                Particle p = new Particle(new Vector3(x * 5, -y, 0), Vector3.zero, 1f);
                 go.transform.position = p.Position;
                 gameObjects.Add(go);
                 go.name = "Particle::" + (gameObjects.Count - 1).ToString();
+                go.AddComponent<MonoParticle>();
+                go.GetComponent<MonoParticle>().particle = p;
                 particles.Add(p);
             }
         }
@@ -74,11 +83,16 @@ public class ClothSim : MonoBehaviour
             if(i % (width) != width -1)
             {
                 SpringDamper sdRight = new SpringDamper(particles[i], particles[i + 1], Ks, Kd, Lo);
+                GameObject go = Instantiate(linePrefab) as GameObject;
+                go.GetComponent<MonoSpring>().springDamper = sdRight;
                 springDampers.Add(sdRight);
             }
             if(i < (particles.Count - height))
             {
                 SpringDamper sdDown = new SpringDamper(particles[i], particles[i + height], Ks, Kd, Lo);
+
+                GameObject go = Instantiate(linePrefab) as GameObject;
+                go.GetComponent<MonoSpring>().springDamper = sdDown;
                 springDampers.Add(sdDown);
             }
         }
@@ -106,34 +120,32 @@ public class ClothSim : MonoBehaviour
                 }
             }
         }
-
+       
     }
   
+    /// <summary>
+    /// update the ui
+    /// </summary>
     public void Update()
     {
         particles[0].Position = new Vector3(slider, 0, 0);
         foreach(SpringDamper sd in springDampers)
-        {
-
-            LineRenderer line = new LineRenderer();
-           
-            lineRenderer.Add(line);
-          
+        { 
             Ks = KS.value;
             Kd = KD.value;
             Lo = LO.value;
+            //windz = Wind.value;
 
             sd.Lo = Lo;
             sd.Ks = Ks;
             sd.Kd = Kd;
-        }
-
-      
+            
+        } 
     }
-
+    
     public void FixedUpdate()
     {
-        foreach (Particles p in particles)
+        foreach (Particle p in particles)
         {
             p.Force = Vector3.down * Gravity * p.Mass;
            
@@ -146,8 +158,10 @@ public class ClothSim : MonoBehaviour
 
         foreach (SpringDamper sd in springDampers)
         {
+     
             sd.ComputeForce();
-            sd.Draw();
+            //sd.Draw();
+           
         }
 
         foreach (Triangle t in aeroDynamics)
@@ -166,19 +180,21 @@ public class ClothSim : MonoBehaviour
                 }
             }
         }
+
+
+        foreach (Particle p in particles)
+        {
+            p.Update();
+        }
     }
 
     public void LateUpdate()
     {
-       for(int i = 0; i < particles.Count; ++i)
-        {
-            gameObjects[i].transform.position = particles[i].Position;
-        }
+       //for(int i = 0; i < particles.Count; ++i)
+       // {
+       //     gameObjects[i].transform.position = particles[i].Position;
+       // }
 
-        foreach (Particles p in particles)
-        {
-            p.Update();
-        }
     }
 
     public void ReloadScene()
@@ -193,11 +209,13 @@ public class ClothSim : MonoBehaviour
         KS.value = 10f;
         KD.value = 10f;
         LO.value = 10f;
+        Wind.value = 10f;
 
         
         Ks = KS.value;
         Kd = KD.value;
         Lo = LO.value;
+        windz = Wind.value;
     }
 }
 

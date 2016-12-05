@@ -43,7 +43,7 @@ public class ClothBehaviour : MonoBehaviour
     [SerializeField]
     private GameObject prefab;
 
-    private List<Particles> particles;
+    private List<Particle> particles;
 
     private int nParticles = 26;
 
@@ -87,7 +87,7 @@ public class ClothBehaviour : MonoBehaviour
 	}
     void FixedUpdate()
     {
-        foreach(Particles p in particles)
+        foreach(Particle p in particles)
         {
             p.Force = Gravity * p.Mass;
         }
@@ -95,7 +95,7 @@ public class ClothBehaviour : MonoBehaviour
         {
             sd.ComputeForce();
         }
-        foreach(Particles p in particles)
+        foreach(Particle p in particles)
         {
             p.Update();
         }
