@@ -19,11 +19,11 @@ public class ClothSim : MonoBehaviour
 
 
     [SerializeField]
-    [Range(2f, 10)]
+    [Range(3f, 10)]
     public float Ks;
-    [Range(2f,10)]
+    [Range(3f,10)]
     public float Kd;
-    [Range(2f,10)]
+    [Range(3f,10)]
     public float Lo;
 
     public float Gravity = 5f;
@@ -131,6 +131,7 @@ public class ClothSim : MonoBehaviour
         particles[0].Position = new Vector3(slider, 0, 0);
         foreach(SpringDamper sd in springDampers)
         { 
+            //Values of slider
             Ks = KS.value;
             Kd = KD.value;
             Lo = LO.value;
