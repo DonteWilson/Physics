@@ -14,11 +14,11 @@ public class Particle {
     
     public Particle(Vector3 p, Vector3 v, float mass)
     {
-        m_Position = p;
-        m_Velocity = v;
+        _position = p;
+        _velocity = v;
         m_mass = mass;
-        m_Force = Vector3.zero;
-        m_Momentum = Vector3.zero;
+        _force = Vector3.zero;
+
     }
 
     public void AddForce(Vector3 force)
@@ -27,11 +27,10 @@ public class Particle {
     }
 
     public bool Kinematic;
-    Vector3 m_Position;
-    Vector3 m_Acceleration;
-    Vector3 m_Momentum;
-    Vector3 m_Force;
-    Vector3 m_Velocity;
+    Vector3 _position;
+    Vector3 _acceleration;
+    Vector3 _force;
+    Vector3 _velocity;
 
     float m_mass;
 
@@ -42,30 +41,30 @@ public class Particle {
     }
     public Vector3 Position
     {
-        get { return m_Position; }
-        set { m_Position = value; }
+        get { return _position; }
+        set { _position = value; }
     }
 
     public Vector3 Force
     {
-        get { return m_Force; }
-        set { m_Force = value; }
+        get { return _force; }
+        set { _force = value; }
     }
 
     public Vector3 Velocity
     {
-        get { return m_Velocity; }
-        set { m_Velocity = value; }
+        get { return _velocity; }
+        set { _velocity = value; }
     }
 
     public void Update()
     {
         if (Kinematic)
             return;
-        m_Acceleration = (1f / m_mass) * Force;
-        m_Velocity +=  m_Acceleration * Time.fixedDeltaTime;
-        m_Velocity = Vector3.ClampMagnitude(m_Velocity, 3.0f);
-        m_Position += m_Velocity * Time.fixedDeltaTime;
+        _acceleration = (1f / m_mass) * Force;
+        _velocity +=  _acceleration * Time.fixedDeltaTime;
+        _velocity = Vector3.ClampMagnitude(_velocity, 3.0f);
+        _position += _velocity * Time.fixedDeltaTime;
     }
 }
 public class SpringDamper
@@ -110,10 +109,10 @@ public class SpringDamper
 [Serializable]
 public class Triangle
 {
-    public Vector3 surfnorm;
-    public Vector3 averageV;
-    public float areaTri;
-    public float windCoeff = 1f;
+    public Vector3 Surfnorm;
+    public Vector3 AverageV;
+    public float AreaTri;
+    public float WindCoeff = 1f;
     public Particle P1, P2, P3;
     public SpringDamper D1, D2, D3;
 
@@ -129,12 +128,12 @@ public class Triangle
     public void ComputeAD(Vector3 air)
     {
         Vector3 surface = ((P1.Velocity + P2.Velocity + P3.Velocity) / 3);
-        averageV = surface - air;
-        surfnorm = Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)) /
+        AverageV = surface - air;
+        Surfnorm = Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)) /
         Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
         float ao = (1f / 2f) * Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
-        areaTri = ao * (Vector3.Dot(averageV, surfnorm) / averageV.magnitude);
-        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(averageV.magnitude, 2) * 1f * areaTri * surfnorm;
+        AreaTri = ao * (Vector3.Dot(AverageV, Surfnorm) / AverageV.magnitude);
+        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(AverageV.magnitude, 2) * 1f * AreaTri * Surfnorm;
         P1.AddForce(aeroForce / 3);
         P2.AddForce(aeroForce / 3);
         P3.AddForce(aeroForce / 3);

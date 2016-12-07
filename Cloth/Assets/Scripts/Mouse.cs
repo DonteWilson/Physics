@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+//Need to fix some portions of code, so that I can grab the game object correctly.
+//Currently having issues 
 public class Mouse : MonoBehaviour {
 
     GameObject current = null;

@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class ClothSim : MonoBehaviour
 {
-    GameObject Sphere1, Sphere2;
-    List<Particle> particles;
-    List<SpringDamper> springDampers;
-    List<GameObject> gameObjects;
-    public List<LineRenderer> lineRenderers;
-    public List<Triangle> aeroDynamics;
-    public bool wind;
+    
+    List<Particle> _particles;
+    List<SpringDamper> _springDampers;
+    List<GameObject> _gameObjects;
+    public List<LineRenderer> LineRenderers;
+    public List<Triangle> AeroDynamics;
+    public bool Wind;
 
-    public GameObject linePrefab;
+    public GameObject LinePrefab;
    
 
 
@@ -29,21 +29,21 @@ public class ClothSim : MonoBehaviour
     public float Gravity = 5f;
 
     [Range(0.0f, 5f)]
-    public int height;
+    public int Height;
 
     [Range(0.0f, 5)]
-    public int width;
+    public int Width;
 
     [Range(0.0f, 5)]
-    public float slider = 0;
+    public float Slider = 0;
 
     [Range(2f, 10f)]
-    public float windz;
+    public float Windz;
 
     public Slider KS;
     public Slider KD;
     public Slider LO;
-    public Slider Wind;
+    public Slider wind;
     
     //order would be to make a new Object()
     //instantiate the gameObject that will represent it in the scene
@@ -54,69 +54,69 @@ public class ClothSim : MonoBehaviour
     public void Start()
     {
         //Renews each list
-        particles = new List<Particle>();
-        springDampers = new List<SpringDamper>();
-        gameObjects = new List<GameObject>();
-        aeroDynamics = new List<Triangle>();
+        _particles = new List<Particle>();
+        _springDampers = new List<SpringDamper>();
+        _gameObjects = new List<GameObject>();
+        AeroDynamics = new List<Triangle>();
         
 //        LineRenderer line = gameObject.AddComponent<LineRenderer>();
 
 
-        for (int y = 0; y < height; ++y)
+        for (int y = 0; y <Height; ++y)
         {
-            for(int x = 0; x < width; ++x)
+            for(int x = 0; x < Width; ++x)
             {
                 GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 
                 Particle p = new Particle(new Vector3(x * 5, -y, 0), Vector3.zero, 1f);
                 go.transform.position = p.Position;
-                gameObjects.Add(go);
-                go.name = "Particle::" + (gameObjects.Count - 1).ToString();
+                _gameObjects.Add(go);
+                go.name = "Particle::" + (_gameObjects.Count - 1).ToString();
                 go.AddComponent<MonoParticle>();
                 go.GetComponent<MonoParticle>().particle = p;
-                particles.Add(p);
+                _particles.Add(p);
             }
         }
 
-        for (int i = 0; i < particles.Count; ++i)
+        for (int i = 0; i < _particles.Count; ++i)
         {
-            if(i % (width) != width -1)
+            if(i % (Width) != Width -1)
             {
-                SpringDamper sdRight = new SpringDamper(particles[i], particles[i + 1], Ks, Kd, Lo);
-                GameObject go = Instantiate(linePrefab) as GameObject;
+                SpringDamper sdRight = new SpringDamper(_particles[i], _particles[i + 1], Ks, Kd, Lo);
+                GameObject go = Instantiate(LinePrefab) as GameObject;
                 go.GetComponent<MonoSpring>().springDamper = sdRight;
-                springDampers.Add(sdRight);
+                _springDampers.Add(sdRight);
             }
-            if(i < (particles.Count - height))
+            if(i < (_particles.Count -Height))
             {
-                SpringDamper sdDown = new SpringDamper(particles[i], particles[i + height], Ks, Kd, Lo);
+                SpringDamper sdDown = new SpringDamper(_particles[i], _particles[i +Height], Ks, Kd, Lo);
 
-                GameObject go = Instantiate(linePrefab) as GameObject;
+                GameObject go = Instantiate(LinePrefab) as GameObject;
                 go.GetComponent<MonoSpring>().springDamper = sdDown;
-                springDampers.Add(sdDown);
+                _springDampers.Add(sdDown);
             }
         }
 
-        particles[0].Kinematic = true;
-        particles[width - 1].Kinematic = true;
+        _particles[0].Kinematic = true;
+        _particles[Width - 1].Kinematic = true;
 
-        for (int i = 0; i < width * height; i++)
+        for (int i = 0; i < Width *Height; i++)
         {
-            if (i % width != width - 1)
+            if (i % Width != Width - 1)
             {
-                if (i < (height * width) - width)
+                if (i < (Height * Width) - Width)
                 {
-                    Triangle t = new Triangle(particles[i], particles[i + 1], particles[i + width]);
-                    aeroDynamics.Add(t);
+                    Triangle t = new Triangle(_particles[i], _particles[i + 1], _particles[i + Width]);
+                    AeroDynamics.Add(t);
                 }
             }
 
-            if (i % width != 0)
+            if (i % Width != 0)
             {
-                if (i < (height * width) - width)
+                if (i < (Height * Width) - Width)
                 {
-                    Triangle t = new Triangle(particles[i], particles[i + width], particles[i + width - 1]);
-                    aeroDynamics.Add(t);
+                    Triangle t = new Triangle(_particles[i], _particles[i + Width], _particles[i + Width - 1]);
+                    AeroDynamics.Add(t);
                 }
             }
         }
@@ -128,8 +128,8 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void Update()
     {
-        particles[0].Position = new Vector3(slider, 0, 0);
-        foreach(SpringDamper sd in springDampers)
+        _particles[0].Position = new Vector3(Slider, 0, 0);
+        foreach(SpringDamper sd in _springDampers)
         { 
             //Values of slider
             Ks = KS.value;
@@ -146,18 +146,18 @@ public class ClothSim : MonoBehaviour
     
     public void FixedUpdate()
     {
-        foreach (Particle p in particles)
+        foreach (Particle p in _particles)
         {
             p.Force = Vector3.down * Gravity * p.Mass;
            
         }
-        //foreach (Triangle t in aeroDynamics)
+        //foreach (Triangle t in AeroDynamics)
         //{
-        //    //aeroDynamics.Add(t);
+        //    //AeroDynamics.Add(t);
         //    //t.Draw();
         //}
 
-        foreach (SpringDamper sd in springDampers)
+        foreach (SpringDamper sd in _springDampers)
         {
      
             sd.ComputeForce();
@@ -165,25 +165,25 @@ public class ClothSim : MonoBehaviour
            
         }
 
-        foreach (Triangle t in aeroDynamics)
+        foreach (Triangle t in AeroDynamics)
         {
-            t.ComputeAD(Vector3.forward * windz);
+            t.ComputeAD(Vector3.forward * Windz);
             if (wind)
             {
-                if(!springDampers.Contains(t.D1) || !springDampers.Contains(t.D2) || !springDampers.Contains(t.D3))
+                if(!_springDampers.Contains(t.D1) || !_springDampers.Contains(t.D2) || !_springDampers.Contains(t.D3))
                 {
-                    //aeroDynamics.Remove(t);
+                    //AeroDynamics.Remove(t);
                 }
                 else
                 {
-                    t.ComputeAD(Vector3.forward * windz);
+                    t.ComputeAD(Vector3.forward * Windz);
                     
                 }
             }
         }
 
 
-        foreach (Particle p in particles)
+        foreach (Particle p in _particles)
         {
             p.Update();
         }
@@ -210,13 +210,13 @@ public class ClothSim : MonoBehaviour
         KS.value = 10f;
         KD.value = 10f;
         LO.value = 10f;
-        Wind.value = 10f;
+        wind.value = 10f;
 
         
         Ks = KS.value;
         Kd = KD.value;
         Lo = LO.value;
-        windz = Wind.value;
+        Windz = wind.value;
     }
 }
 
