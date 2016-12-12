@@ -1,15 +1,30 @@
 ﻿using UnityEngine;
-using System.Collections;
 
+/// <summary>
+/// MonoParticle class
+/// </summary>
 public class MonoParticle : MonoBehaviour {
-    public Particle particle;
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void LateUpdate () {
-        transform.position = particle.Position;	
-	}
+
+    /// <summary>
+    /// Creates a public particle variable.
+    /// </summary>
+   public Particle particle;
+
+    /// <summary>
+    /// Start Function
+    /// </summary>
+    private void Start()
+    {
+        
+    }
+
+
+    /// <summary>
+    /// Late Update
+    /// </summary>
+    private void LateUpdate()
+    {
+        this.transform.position = this.particle.Position;
+    }
+
 }

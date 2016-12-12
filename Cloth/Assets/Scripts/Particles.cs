@@ -1,72 +1,107 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
+using UnityEngine;
+
 
 [Serializable]
 public class Particle {
-    Particle()
-    {
-
-    }
-
-
-    
-    public Particle(Vector3 p, Vector3 v, float mass)
-    {
-        _position = p;
-        _velocity = v;
-        m_mass = mass;
-        _force = Vector3.zero;
-
-    }
-
-    public void AddForce(Vector3 force)
-    {
-        Force += force;
-    }
 
     public bool Kinematic;
-    Vector3 _position;
-    Vector3 _acceleration;
-    Vector3 _force;
-    Vector3 _velocity;
+    private float mMass;
+    /// <summary>
+    /// Vector variables
+    /// </summary>
+    Vector3 position;
+    Vector3 acceleration;
+    Vector3 force;
+    Vector3 velocity;
 
-    float m_mass;
+    /// <summary>
+    /// Initializes a new instance of the Particle class
+    /// </summary>
+    /// <param name="p">The Position</param>
+    /// <param name="v">The Velocity</param>
+    /// <param name="mass">The Mass</param>
+    public Particle(Vector3 p, Vector3 v, float mass)
+    {
+        this.position = p;
+        this.velocity = v;
+        this.mMass = mass;
+        this.force = Vector3.zero;
 
+    }
+
+    /// <summary>
+    /// Prevents a default instance of the Particle class from being created.
+    /// </summary>
+    private Particle()
+    {
+    }
+
+    /// <summary>
+    /// Gets or sets the mass
+    /// </summary>
     public float Mass
     {
-        get { return m_mass; }
-        set { m_mass = value; }
+        get { return this.mMass; }
+        set { this.mMass = value; }
     }
+
+    /// <summary>
+    /// Gets or sets the position
+    /// </summary>
     public Vector3 Position
     {
-        get { return _position; }
-        set { _position = value; }
+        get { return this.position; }
+        set { this.position = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the force
+    /// </summary>
     public Vector3 Force
     {
-        get { return _force; }
-        set { _force = value; }
+        get { return this.force; }
+        set { this.force = value; }
     }
 
+    /// <summary>
+    /// Gets or sets the velocity
+    /// </summary>
     public Vector3 Velocity
     {
-        get { return _velocity; }
-        set { _velocity = value; }
+        get { return this.velocity; }
+        set { this.velocity = value; }
     }
 
+    /// <summary>
+    /// Adds Force
+    /// </summary>
+    /// <param name="force"></param>
+    public void AddForce(Vector3 force)
+    {
+        this.Force += force;
+    }
+
+    /// <summary>
+    /// Update functions
+    /// </summary>
     public void Update()
     {
-        if (Kinematic)
+        if (this.Kinematic)
+        {
             return;
-        _acceleration = (1f / m_mass) * Force;
-        _velocity +=  _acceleration * Time.fixedDeltaTime;
-        _velocity = Vector3.ClampMagnitude(_velocity, 3.0f);
-        _position += _velocity * Time.fixedDeltaTime;
-    }
+        }
+
+        this.acceleration = (1f / this.mMass) * this.Force;
+        this.velocity += this.acceleration * Time.fixedDeltaTime;
+        this.velocity = Vector3.ClampMagnitude(this.velocity, 3.0f);
+        this.position += this.velocity * Time.fixedDeltaTime;
+    }  
 }
+
+/// <summary>
+/// Spring Damper class
+/// </summary>
 public class SpringDamper
 {
     public Particle p1, p2, p3;
@@ -75,80 +110,97 @@ public class SpringDamper
     public float Lo;
     
   
-
-    public SpringDamper(Particle P1, Particle P2, float SpringK, float SpringD, float SpringR)
+    /// <summary>
+    /// Initializes a new instance of the SpringDamper class.
+    /// </summary>
+    /// <param name="pOne">Particle One</param>
+    /// <param name="pTwo">Particle Two</param>
+    /// <param name="springK">Spring Ks</param>
+    /// <param name="springD">Spring Damper</param>
+    /// <param name="springR">Spring Rest</param>
+    public SpringDamper(Particle pOne, Particle pTwo, float springK, float springD, float springR)
     {
-        Ks = SpringK;
-        Kd = SpringD;
-        Lo = SpringR;
-        p1 = P1;
-        p2 = P2;
+        this.Ks = springK;
+        this.Kd = springD;
+        this.Lo = springR;
+        this.p1 = pOne;
+        this.p2 = pTwo;
     }
+
+    /// <summary>
+    /// Compute Force on springDampers
+    /// </summary>
     public void ComputeForce()
     {
-        Vector3 dist = (p2.Position - p1.Position);
+        Vector3 dist = this.p2.Position - this.p1.Position;
         Vector3 distD = dist.normalized;
 
-        float p11D = Vector3.Dot(distD, p1.Velocity);
-        float p21D = Vector3.Dot(distD, p2.Velocity);
+        float p11D = Vector3.Dot(distD, this.p1.Velocity);
+        float p21D = Vector3.Dot(distD, this.p2.Velocity);
 
 
-        float Fs = -Ks * (Lo - dist.magnitude);
-        float Fd = -Kd * (p11D - p21D);
+        float fs = -this.Ks * (this.Lo - dist.magnitude);
+        float fd = -this.Kd * (p11D - p21D);
 
-        Vector3 SpringForce = (Fs + Fd) * distD;
+        Vector3 SpringForce = (fs + fd) * distD;
 
         //adds force to the spring
-        p1.AddForce(SpringForce);
-        p2.AddForce(-SpringForce);
+        this.p1.AddForce(SpringForce);
+        this.p2.AddForce(-SpringForce);
 
     }
 
 }
 
 [Serializable]
+
+/// <summary>
+/// Triangle Class
+/// </summary>
 public class Triangle
 {
-    public Vector3 Surfnorm;
-    public Vector3 AverageV;
-    public float AreaTri;
-    public float WindCoeff = 1f;
-    public Particle P1, P2, P3;
     public SpringDamper D1, D2, D3;
+    private Vector3 surfnorm;
+    private Vector3 averageV;
+    private float areaTri;
+    private float windCoeff = 1f;
+    private Particle p1, p2, p3;
 
-    public Triangle() { }
+    /// <summary>
+    /// Initializes a new instance of the Triangle class
+    /// </summary>
+    public Triangle()
+    {        
+    }
 
+    /// <summary>
+    /// Initializes a new instance of the Triangle class
+    /// </summary>
+    /// <param name="pOne">Particle one</param>
+    /// <param name="pTwo">Particle two</param>
+    /// <param name="pThree">Particle three</param>
     public Triangle(Particle pOne, Particle pTwo, Particle pThree)
     {
-        P1 = pOne;
-        P2 = pTwo;
-        P3 = pThree;
+        this.p1 = pOne;
+        this.p2 = pTwo;
+        this.p3 = pThree;
     }
 
-    public void ComputeAD(Vector3 air)
+    /// <summary>
+    /// Computes air forces
+    /// </summary>
+    /// <param name="air">Vector3 air</param>
+    public void ComputeAd(Vector3 air)
     {
-        Vector3 surface = ((P1.Velocity + P2.Velocity + P3.Velocity) / 3);
-        AverageV = surface - air;
-        Surfnorm = Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)) /
-        Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
-        float ao = (1f / 2f) * Vector3.Cross((P2.Position - P1.Position), (P3.Position - P1.Position)).magnitude;
-        AreaTri = ao * (Vector3.Dot(AverageV, Surfnorm) / AverageV.magnitude);
-        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(AverageV.magnitude, 2) * 1f * AreaTri * Surfnorm;
-        P1.AddForce(aeroForce / 3);
-        P2.AddForce(aeroForce / 3);
-        P3.AddForce(aeroForce / 3);
-
-        
+        Vector3 surface = (this.p1.Velocity + this.p2.Velocity + this.p3.Velocity) / 3;
+        this.averageV = surface - air;
+        this.surfnorm = Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position) /
+        Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position).magnitude;
+        float ao = (1f / 2f) * Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position).magnitude;
+        this.areaTri = ao * (Vector3.Dot(this.averageV, this.surfnorm) / this.averageV.magnitude);
+        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(this.averageV.magnitude, 2) * 1f * this.areaTri * this.surfnorm;
+        this.p1.AddForce(aeroForce / 3);
+        this.p2.AddForce(aeroForce / 3);
+        this.p3.AddForce(aeroForce / 3);      
     }
-
-    //public void Draw()
-    //{
-     
-    //    Debug.DrawLine(P3.Position, P1.Position, Color.cyan);
-    //}
 }
-   
-  
-
-
-   
