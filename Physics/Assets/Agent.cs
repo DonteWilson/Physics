@@ -1,45 +1,77 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using System.Collections;
+
 
 public class Agent : MonoBehaviour
 {
-    public Vector3 force;
-    public Vector3 desiredv;
-    public Vector3 velocity;
+    /// <summary>
+    /// Contains Vector3 force
+    /// </summary>
+    private Vector3 force;
+
+    /// <summary>
+    /// Contains Vector3 desired force 
+    /// </summary>
+    private Vector3 desiredv;
+
+    /// <summary>
+    /// Contains Vector3 velocity
+    /// </summary>
+    private Vector3 velocity;
+
+    /// <summary>
+    /// Contains integer for mass
+    /// </summary>
     public int mass;
-    public Vector3 steering;
+
+    private Vector3 steering;
+
+    /// <summary>
+    /// Creates a transform for target
+    /// </summary>
     public Transform target;
 
-    public float arrival;
+    /// <summary>
+    /// private float arrival
+    /// </summary>
+    private float arrival;
+
+    /// <summary>
+    /// float radius
+    /// </summary>
     private float radius;
 
-    void start()
+    /// <summary>
+    /// Start update
+    /// </summary>
+    private void Start()
     {
-        arrival = 1;
+        this.arrival = 1;
     }
 
+    /// <summary>
+    /// Fixed Update
+    /// </summary>
+    private void FixedUpdate()
+    {
+        this.steering = (this.desiredv - this.velocity).normalized;
+        this.desiredv = (this.target.position - this.transform.position).normalized / this.mass;
+        this.velocity += this.steering;
+        if (this.velocity.magnitude > 5)
+        {
+            this.velocity = this.velocity.normalized;
+        }
 
-	// Use this for initialization
-	void FixedUpdate () {
-        steering = (desiredv - velocity).normalized;
-        desiredv = (target.position - transform.position).normalized / mass;
-        velocity += steering;
-        if (velocity.magnitude > 5)
-            velocity = velocity.normalized;
+        float dist = Vector3.Distance(this.target.transform.position, this.transform.position);
 
-        float dist = Vector3.Distance(target.transform.position, transform.position);
+        this.arrival = (dist <= this.radius) ? dist / this.radius : 1;
+    } 
 
-        arrival = (dist <= radius) ? dist / radius : 1;
-
+    /// <summary>
+    /// Late Update
+    /// </summary>
+    private void LateUpdate()
+    {
+        this.transform.position += this.velocity;
+        this.velocity *= this.arrival;
     }
-	
-	// Update is called once per frame
-	void LateUpdate () {
-        transform.position += velocity;
-
-        velocity *= arrival;
-        
-	
-	}
 }
