@@ -1,19 +1,22 @@
 ﻿using System;
 using UnityEngine;
 
-
+/// <summary>
+/// Public class Particle
+/// </summary>
 [Serializable]
-public class Particle {
+public class Particle
+{
 
     public bool Kinematic;
-    private float mMass;
+    public float mMass;
     /// <summary>
     /// Vector variables
     /// </summary>
-    Vector3 position;
-    Vector3 acceleration;
-    Vector3 force;
-    Vector3 velocity;
+    public Vector3 position;
+    public Vector3 acceleration;
+    public Vector3 force;
+    public Vector3 velocity;
 
     /// <summary>
     /// Initializes a new instance of the Particle class
@@ -73,15 +76,7 @@ public class Particle {
         set { this.velocity = value; }
     }
 
-    /// <summary>
-    /// Adds Force
-    /// </summary>
-    /// <param name="force"></param>
-    public void AddForce(Vector3 force)
-    {
-        this.Force += force;
-    }
-
+  
     /// <summary>
     /// Update functions
     /// </summary>
@@ -96,7 +91,17 @@ public class Particle {
         this.velocity += this.acceleration * Time.fixedDeltaTime;
         this.velocity = Vector3.ClampMagnitude(this.velocity, 3.0f);
         this.position += this.velocity * Time.fixedDeltaTime;
-    }  
+    }
+
+    /// <summary>
+    /// Adds Force
+    /// </summary>
+    /// <param name="force">Applies Force</param>
+    public void AddForce(Vector3 Force)
+    {
+        this.Force += this.force;
+    }
+
 }
 
 /// <summary>
@@ -160,11 +165,11 @@ public class SpringDamper
 public class Triangle
 {
     public SpringDamper D1, D2, D3;
-    private Vector3 surfnorm;
-    private Vector3 averageV;
-    private float areaTri;
-    private float windCoeff = 1f;
-    private Particle p1, p2, p3;
+    public Vector3 surfnorm;
+    public Vector3 averageV;
+    public float areaTri;
+    public float windCoeff = 1f;
+    public Particle p1, p2, p3;
 
     /// <summary>
     /// Initializes a new instance of the Triangle class

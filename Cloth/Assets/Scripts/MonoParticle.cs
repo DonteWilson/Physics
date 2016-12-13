@@ -3,7 +3,8 @@
 /// <summary>
 /// MonoParticle class
 /// </summary>
-public class MonoParticle : MonoBehaviour {
+public class MonoParticle : MonoBehaviour
+{
 
     /// <summary>
     /// Creates a public particle variable.
@@ -13,16 +14,14 @@ public class MonoParticle : MonoBehaviour {
     /// <summary>
     /// Start Function
     /// </summary>
-    private void Start()
+    void Start()
     {
         
     }
-
-
-    /// <summary>
-    /// Late Update
-    /// </summary>
-    private void LateUpdate()
+   /// <summary>
+   /// Late Update
+   /// </summary>
+    void LateUpdate ()
     {
         this.transform.position = this.particle.Position;
     }
