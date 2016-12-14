@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 /// <summary>
 /// MonoParticle class
@@ -14,14 +16,14 @@ public class MonoParticle : MonoBehaviour
     /// <summary>
     /// Start Function
     /// </summary>
-    void Start()
+    public void Start()
     {
         
     }
    /// <summary>
    /// Late Update
    /// </summary>
-    void LateUpdate ()
+   public void LateUpdate()
     {
         this.transform.position = this.particle.Position;
     }

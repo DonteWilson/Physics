@@ -38,14 +38,14 @@ public class ClothSim : MonoBehaviour
     [Range(3f, 10f)]
     public float Lo;
 
-    public float gravity = 5f;
+    public float Gravity = 5f;
 
    
 
     /// <summary>
     /// Creates a float Slider
     /// </summary>
-    [Range(0.0f, 5)]
+    [Range(0.0f, 10)]
     public float slider = 0;
 
     /// <summary>
@@ -104,9 +104,9 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        this.LO.value = this.Lo;
-        this.KD.value = this.Kd;
-        this.KS.value = this.Ks;
+        //////this.LO.value = this.Lo;
+        //////this.KD.value = this.Kd;
+        //////this.KS.value = this.Ks;
 
         ////Renews each list
         this.Particles = new List<Particle>();
@@ -119,7 +119,7 @@ public class ClothSim : MonoBehaviour
 
         for (int y = 0; y < this.Height; ++y)
         {
-            for(int x = 0; x < this.Width; ++x)
+            for (int x = 0; x < this.Width; ++x)
             {
                 GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 
@@ -206,7 +206,7 @@ public class ClothSim : MonoBehaviour
     {
         foreach (Particle p in this.Particles)
         {
-            p.Force = Vector3.down * this.gravity * p.Mass;
+            p.Force = Vector3.down * this.Gravity * p.Mass;
            
         }
         ////foreach (Triangle t in AeroDynamics)
@@ -271,6 +271,9 @@ public class ClothSim : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// On Mouse Drag Button
+    /// </summary>
     public void OnMouseDrag()
     {
         var curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.ScreenPoint.z);
@@ -293,12 +296,12 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void SetSliders()
     {
-       
+
         this.KS.value = 10f;
         this.KD.value = 10f;
         this.LO.value = 10f;
         this.wind.value = 10f;
-      
+
         this.Ks = this.KS.value;
         this.Kd = this.KD.value;
         this.Lo = this.LO.value;
