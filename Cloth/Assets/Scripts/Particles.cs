@@ -76,23 +76,6 @@ public class Particle
         set { this.velocity = value; }
     }
 
-  
-    /// <summary>
-    /// Update functions
-    /// </summary>
-    public void Update()
-    {
-        if (this.Kinematic)
-        {
-            return;
-        }
-
-        this.acceleration = (1f / this.mMass) * this.Force;
-        this.velocity += this.acceleration * Time.fixedDeltaTime;
-        this.velocity = Vector3.ClampMagnitude(this.velocity, 3.0f);
-        this.position += this.velocity * Time.fixedDeltaTime;
-    }
-
     /// <summary>
     /// Adds Force
     /// </summary>
@@ -100,6 +83,21 @@ public class Particle
     public void AddForce(Vector3 Force)
     {
         this.Force += this.force;
+    }
+
+
+    /// <summary>
+    /// Update functions
+    /// </summary>
+    public void Update()
+    {
+        if (this.Kinematic)
+            return;
+
+        this.acceleration = (1f / this.mMass) * this.Force;
+        this.velocity += this.acceleration * Time.fixedDeltaTime;
+        this.velocity = Vector3.ClampMagnitude(this.velocity, 3.0f);
+        this.position += this.velocity * Time.fixedDeltaTime;        
     }
 
 }

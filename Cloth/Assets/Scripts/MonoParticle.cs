@@ -1,6 +1,7 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections;
+using UnityEngine;
+
 
 /// <summary>
 /// MonoParticle class
@@ -20,12 +21,13 @@ public class MonoParticle : MonoBehaviour
     {
         
     }
+
    /// <summary>
    /// Late Update
    /// </summary>
    public void LateUpdate()
-    {
+   {
         this.transform.position = this.particle.Position;
-    }
+   }
 
 }

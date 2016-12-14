@@ -10,6 +10,7 @@ using UnityEngine.UI;
 
 public class ClothSim : MonoBehaviour
 {
+    [SerializeField]
     /// <summary>
     /// Holds the Height
     /// </summary>
@@ -27,10 +28,6 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public GameObject LinePrefab;
 
-
-   
-
-    [SerializeField]
     [Range(3f, 10f)]    
     public float Ks;
     [Range(3f, 10f)]
@@ -39,8 +36,6 @@ public class ClothSim : MonoBehaviour
     public float Lo;
 
     public float Gravity = 5f;
-
-   
 
     /// <summary>
     /// Creates a float Slider
