@@ -76,15 +76,6 @@ public class Particle
         set { this.velocity = value; }
     }
 
-    /// <summary>
-    /// Adds Force
-    /// </summary>
-    /// <param name="force">Applies Force</param>
-    public void AddForce(Vector3 Force)
-    {
-        this.Force += this.force;
-    }
-
 
     /// <summary>
     /// Update functions
@@ -100,14 +91,26 @@ public class Particle
         this.position += this.velocity * Time.fixedDeltaTime;        
     }
 
+
+    /// <summary>
+    /// Adds Force
+    /// </summary>
+    /// <param name="force">Applies Force</param>
+    public void AddForce(Vector3 Force)
+    {
+        this.Force += this.force;
+    }
+
+
 }
 
 /// <summary>
 /// Spring Damper class
 /// </summary>
+[Serializable]
 public class SpringDamper
 {
-    public Particle p1, p2, p3;
+    public Particle p1, p2;
     public float Ks;
     public float Kd;
     public float Lo;
@@ -123,12 +126,14 @@ public class SpringDamper
     /// <param name="springR">Spring Rest</param>
     public SpringDamper(Particle pOne, Particle pTwo, float springK, float springD, float springR)
     {
+
+        this.p1 = pOne;
+        this.p2 = pTwo;
         this.Ks = springK;
         this.Kd = springD;
         this.Lo = springR;
-        this.p1 = pOne;
-        this.p2 = pTwo;
     }
+
 
     /// <summary>
     /// Compute Force on springDampers

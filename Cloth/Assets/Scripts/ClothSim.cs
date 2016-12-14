@@ -84,10 +84,10 @@ public class ClothSim : MonoBehaviour
     /// <summary>
     /// /Slider variables
     /// </summary>
-    public Slider KS;
-    public Slider KD;
-    public Slider LO;
-    public Slider wind;
+    public Slider slider_KS;
+    public Slider slider_KD;
+    public Slider slider_LO;
+    public Slider slider_WIND;
 
     /////order would be to make a new Object()
     ////instantiate the gameObject that will represent it in the scene
@@ -99,74 +99,74 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        //////this.LO.value = this.Lo;
-        //////this.KD.value = this.Kd;
-        //////this.KS.value = this.Ks;
+        //////LO.value = Lo;
+        //////KD.value = Kd;
+        //////KS.value = Ks;
 
         ////Renews each list
-        this.Particles = new List<Particle>();
-        this.SpringDampers = new List<SpringDamper>();
-        this.GameObjects = new List<GameObject>();
-        this.AeroDynamics = new List<Triangle>();
+        Particles = new List<Particle>();
+        SpringDampers = new List<SpringDamper>();
+        GameObjects = new List<GameObject>();
+        AeroDynamics = new List<Triangle>();
         
 ////LineRenderer line = gameObject.AddComponent<LineRenderer>();
 
 
-        for (int y = 0; y < this.Height; ++y)
+        for (int y = 0; y < Height; ++y)
         {
-            for (int x = 0; x < this.Width; ++x)
+            for (int x = 0; x < Width; ++x)
             {
                 GameObject go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                 
                 Particle p = new Particle(new Vector3(x * 5, -y, 0), Vector3.zero, 1f);
                 go.transform.position = p.Position;
-                this.GameObjects.Add(go);
-                go.name = "Particle::" + (this.GameObjects.Count - 1).ToString();
+                GameObjects.Add(go);
+                go.name = "Particle::" + (GameObjects.Count - 1).ToString();
                 go.AddComponent<MonoParticle>();
                 go.GetComponent<MonoParticle>().particle = p;
-                this.Particles.Add(p);
+                Particles.Add(p);
             }
         }
 
-        for (int i = 0; i < this.Particles.Count; ++i)
+        for (int i = 0; i < Particles.Count; ++i)
         {
-            if(i % this.Width != this.Width - 1)
+            if(i % Width != Width - 1)
             {
-                SpringDamper sdRight = new SpringDamper(this.Particles[i], this.Particles[i + 1], this.Ks, this.Kd, this.Lo);
-                GameObject go = Instantiate(this.LinePrefab) as GameObject;
+                SpringDamper sdRight = new SpringDamper(Particles[i], Particles[i + 1], Ks, Kd, Lo);
+                GameObject go = Instantiate(LinePrefab) as GameObject;
                 go.GetComponent<MonoSpring>().springDamper = sdRight;
-                this.SpringDampers.Add(sdRight);
+                SpringDampers.Add(sdRight);
             }
-            if(i < (this.Particles.Count - this.Height))
+            if(i < (Particles.Count - Height))
             {
-                SpringDamper sdDown = new SpringDamper(this.Particles[i], this.Particles[i + this.Height], this.Ks, this.Kd, this.Lo);
+                SpringDamper sdDown = new SpringDamper(Particles[i], Particles[i + Height], Ks, Kd, Lo);
 
-                GameObject go = Instantiate(this.LinePrefab) as GameObject;
+                GameObject go = Instantiate(LinePrefab) as GameObject;
                 go.GetComponent<MonoSpring>().springDamper = sdDown;
-                this.SpringDampers.Add(sdDown);
+                SpringDampers.Add(sdDown);
             }
         }
 
-        this.Particles[0].Kinematic = true;
-        this.Particles[this.Width - 1].Kinematic = true;
+        Particles[0].Kinematic = true;
+        Particles[Width - 1].Kinematic = true;
 
-        for (int i = 0; i < this.Width * this.Height; i++)
+        for (int i = 0; i < Width * Height; i++)
         {
-            if (i % this.Width != this.Width - 1)
+            if (i % Width != Width - 1)
             {
-                if (i < (this.Height * this.Width) - this.Width)
+                if (i < (Height * Width) - Width)
                 {
-                    Triangle t = new Triangle(this.Particles[i], this.Particles[i + 1], this.Particles[i + this.Width]);
-                    this.AeroDynamics.Add(t);
+                    Triangle t = new Triangle(Particles[i], Particles[i + 1], Particles[i + Width]);
+                    AeroDynamics.Add(t);
                 }
             }
 
-            if (i % this.Width != 0)
+            if (i % Width != 0)
             {
-                if (i < (this.Height * this.Width) - this.Width)
+                if (i < (Height * Width) - Width)
                 {
-                    Triangle t = new Triangle(this.Particles[i], this.Particles[i + this.Width], this.Particles[i + this.Width - 1]);
-                    this.AeroDynamics.Add(t);
+                    Triangle t = new Triangle(Particles[i], Particles[i + Width], Particles[i + Width - 1]);
+                    AeroDynamics.Add(t);
                 }
             }
         }
@@ -176,21 +176,16 @@ public class ClothSim : MonoBehaviour
     /// <summary>
     /// update the user interface
     /// </summary>
-    public void Update()
+    public void LateUpdate()
     {
-        this.Particles[0].Position = new Vector3(this.slider, 0, 0);
-        foreach (SpringDamper sd in this.SpringDampers)
+        Particles[0].Position = new Vector3(slider, 0, 0);
+        foreach (SpringDamper sd in SpringDampers)
         { 
-            ////Values of slider
-            this.Ks = this.KS.value;
-            this.Kd = this.KD.value;
-            this.Lo = this.LO.value;
+            //////Values of slider
+            //Ks = slider_KS.value;
+            //Kd = slider_KD.value;
+            //Lo = slider_LO.value;
             ////windz = Wind.value;
-
-            sd.Lo = this.Lo;
-            sd.Ks = this.Ks;
-            sd.Kd = this.Kd;
-            
         } 
     }
     
@@ -199,9 +194,9 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void FixedUpdate()
     {
-        foreach (Particle p in this.Particles)
+        foreach (Particle p in Particles)
         {
-            p.Force = Vector3.down * this.Gravity * p.Mass;
+            p.Force = Vector3.down * Gravity * p.Mass;
            
         }
         ////foreach (Triangle t in AeroDynamics)
@@ -210,7 +205,7 @@ public class ClothSim : MonoBehaviour
         //    //t.Draw();
         ////}
 
-        foreach (SpringDamper sd in this.SpringDampers)
+        foreach (SpringDamper sd in SpringDampers)
         {
      
             sd.ComputeForce();
@@ -218,51 +213,51 @@ public class ClothSim : MonoBehaviour
            
         }
 
-        foreach (Triangle t in this.AeroDynamics)
+        foreach (Triangle t in AeroDynamics)
         {
-            t.ComputeAd(Vector3.forward * this.windz);
-            if (this.wind)
+            t.ComputeAd(Vector3.forward * windz);
+            if (slider_WIND)
             {
-                if(!this.SpringDampers.Contains(t.D1) || !this.SpringDampers.Contains(t.D2) || !this.SpringDampers.Contains(t.D3))
+                if(!SpringDampers.Contains(t.D1) || !SpringDampers.Contains(t.D2) || !SpringDampers.Contains(t.D3))
                 {
-                    ////this.aeroDynamics.Remove(t);
+                    ////aeroDynamics.Remove(t);
                 }
                 else
                 {
-                    t.ComputeAd(Vector3.forward * this.windz);
+                    t.ComputeAd(Vector3.forward * windz);
                     
                 }
             }
         }
 
 
-        foreach (Particle p in this.Particles)
+        foreach (Particle p in Particles)
         {
             p.Update();
         }
     }
 
-    /// <summary>
-    /// LateUpdate class function
-    /// </summary>
-    public void LateUpdate()
-    {
-        ////for(int i = 0; i < Particles.Count; ++i)
-        // {
-        //     GameObjects[i].transform.position = Particles[i].Position;
-        // }
-    }
+    ///// <summary>
+    ///// LateUpdate class function
+    ///// </summary>
+    //public void LateUpdate()
+    //{
+    //    //////for (int i = 0; i < Particles.Count; ++i)
+    //    //////{
+    //    //////    GameObjects[i].transform.position = Particles[i].Position;
+    //    //////}
+    //}
 
     /// <summary>
     /// On Mouse Down Function
     /// </summary>
     public void OnMouseDown()
     {
-        this.ScreenPoint = Camera.main.WorldToScreenPoint(this.transform.position);
-        this.Offset = this.transform.position - Camera.main.ScreenToWorldPoint(new Vector3(
+        ScreenPoint = Camera.main.WorldToScreenPoint(transform.position);
+        Offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(
                           Input.mousePosition.x,
                           Input.mousePosition.y,
-                          this.ScreenPoint.z));
+                          ScreenPoint.z));
 
     }
 
@@ -271,9 +266,9 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void OnMouseDrag()
     {
-        var curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, this.ScreenPoint.z);
-        var curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + this.Offset;
-        this.transform.position = curPosition;
+        var curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, ScreenPoint.z);
+        var curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + Offset;
+        transform.position = curPosition;
 
     }
 
@@ -287,21 +282,21 @@ public class ClothSim : MonoBehaviour
     }
     
     /// <summary>
-    /// Function that sets slider values
-    /// </summary>
-    public void SetSliders()
-    {
+    ///// Function that sets slider values
+    ///// </summary>
+    //public void SetSliders()
+    //{
 
-        this.KS.value = 10f;
-        this.KD.value = 10f;
-        this.LO.value = 10f;
-        this.wind.value = 10f;
+    //    slider_KS.value = 10f;
+    //    slider_KD.value = 10f;
+    //    slider_LO.value = 10f;
+    //    slider_WIND.value = 10f;
 
-        this.Ks = this.KS.value;
-        this.Kd = this.KD.value;
-        this.Lo = this.LO.value;
-        this.windz = this.wind.value;
-    }
+    //    Ks = slider_KS.value;
+    //    Kd = slider_KD.value;
+    //    Lo = slider_LO.value;
+    //    windz = slider_WIND.value;
+    //}
 }
 
 
