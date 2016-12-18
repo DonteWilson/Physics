@@ -12,7 +12,7 @@ public class Target : MonoBehaviour
     public float radius;
     [Range(.1f, 1.5f)]public float steeringB;
 
-    void Awake()
+    public void Awake()
     {
         for (int i = 0; i < agent; i++)
         {
@@ -44,7 +44,7 @@ public class Target : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Update()
     {
         foreach(SA sa in FindObjectsOfType<SA>())
         {

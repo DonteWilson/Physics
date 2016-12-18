@@ -7,13 +7,13 @@ public class MonoB : MonoBehaviour {
     public Boids boid;
     public float mass;
 
-    void Awake()
+    public void Awake()
     {
         boid = new Boids(mass);
 
     }
 
-    void LateUpdate()
+    public void LateUpdate()
     {
         boid.UpdateVelocity();
         transform.position = boid.position;
