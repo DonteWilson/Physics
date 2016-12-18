@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
+
 /// <summary>
 /// Public class Particle
 /// </summary>
@@ -9,14 +10,16 @@ public class Particle
 {
 
     public bool Kinematic;
+
+    public bool Click;
     public float mMass;
     /// <summary>
     /// Vector variables
     /// </summary>
-    public Vector3 position;
-    public Vector3 acceleration;
-    public Vector3 force;
-    public Vector3 velocity;
+    public Vector3 _position;
+    public Vector3 _acceleration;
+    public Vector3 _force;
+    public Vector3 _velocity;
 
     /// <summary>
     /// Initializes a new instance of the Particle class
@@ -26,12 +29,14 @@ public class Particle
     /// <param name="mass">The Mass</param>
     public Particle(Vector3 p, Vector3 v, float mass)
     {
-        this.position = p;
-        this.velocity = v;
-        this.mMass = mass;
-        this.force = Vector3.zero;
+        _position = p;
+        _velocity = v;
+        mMass = mass;
+        _force = Vector3.zero;
 
     }
+
+
 
     /// <summary>
     /// Prevents a default instance of the Particle class from being created.
@@ -41,12 +46,22 @@ public class Particle
     }
 
     /// <summary>
+    /// Adds Force
+    /// </summary>
+    /// <param name="force">Applies Force</param>
+    public void AddForce(Vector3 force)
+    {
+        Force += force;
+    }
+
+
+    /// <summary>
     /// Gets or sets the mass
     /// </summary>
     public float Mass
     {
-        get { return this.mMass; }
-        set { this.mMass = value; }
+        get { return mMass; }
+        set { mMass = value; }
     }
 
     /// <summary>
@@ -54,8 +69,8 @@ public class Particle
     /// </summary>
     public Vector3 Position
     {
-        get { return this.position; }
-        set { this.position = value; }
+        get { return _position; }
+        set { _position = value; }
     }
 
     /// <summary>
@@ -63,8 +78,8 @@ public class Particle
     /// </summary>
     public Vector3 Force
     {
-        get { return this.force; }
-        set { this.force = value; }
+        get { return _force; }
+        set { _force = value; }
     }
 
     /// <summary>
@@ -72,33 +87,24 @@ public class Particle
     /// </summary>
     public Vector3 Velocity
     {
-        get { return this.velocity; }
-        set { this.velocity = value; }
+        get { return _velocity; }
+        set { _velocity = value; }
     }
 
 
+  
     /// <summary>
     /// Update functions
     /// </summary>
     public void Update()
     {
-        if (this.Kinematic)
+        if (Kinematic)
             return;
 
-        this.acceleration = (1f / this.mMass) * this.Force;
-        this.velocity += this.acceleration * Time.fixedDeltaTime;
-        this.velocity = Vector3.ClampMagnitude(this.velocity, 3.0f);
-        this.position += this.velocity * Time.fixedDeltaTime;        
-    }
-
-
-    /// <summary>
-    /// Adds Force
-    /// </summary>
-    /// <param name="force">Applies Force</param>
-    public void AddForce(Vector3 Force)
-    {
-        this.Force += this.force;
+        _acceleration = (1f / mMass) * Force;
+        _velocity += _acceleration * Time.fixedDeltaTime;
+        _velocity = Vector3.ClampMagnitude(_velocity, 3.0f);
+        _position += _velocity * Time.fixedDeltaTime;        
     }
 
 
@@ -114,8 +120,11 @@ public class SpringDamper
     public float Ks;
     public float Kd;
     public float Lo;
+    public float L;
+
     
-  
+
+
     /// <summary>
     /// Initializes a new instance of the SpringDamper class.
     /// </summary>
@@ -127,11 +136,11 @@ public class SpringDamper
     public SpringDamper(Particle pOne, Particle pTwo, float springK, float springD, float springR)
     {
 
-        this.p1 = pOne;
-        this.p2 = pTwo;
-        this.Ks = springK;
-        this.Kd = springD;
-        this.Lo = springR;
+        p1 = pOne;
+        p2 = pTwo;
+        Ks = springK;
+        Kd = springD;
+        Lo = springR;
     }
 
 
@@ -140,21 +149,23 @@ public class SpringDamper
     /// </summary>
     public void ComputeForce()
     {
-        Vector3 dist = this.p2.Position - this.p1.Position;
+        Vector3 dist = p2.Position - p1.Position;
         Vector3 distD = dist.normalized;
 
-        float p11D = Vector3.Dot(distD, this.p1.Velocity);
-        float p21D = Vector3.Dot(distD, this.p2.Velocity);
+        float p11D = Vector3.Dot(distD, p1.Velocity);
+        float p21D = Vector3.Dot(distD, p2.Velocity);
 
 
-        float fs = -this.Ks * (this.Lo - dist.magnitude);
-        float fd = -this.Kd * (p11D - p21D);
+        float fs = -Ks * (Lo - dist.magnitude);
+        float fd = -Kd * (p11D - p21D);
 
         Vector3 SpringForce = (fs + fd) * distD;
 
         //adds force to the spring
-        this.p1.AddForce(SpringForce);
-        this.p2.AddForce(-SpringForce);
+        p1.AddForce(SpringForce);
+        p2.AddForce(-SpringForce);
+
+        L = dist.magnitude;
 
     }
 
@@ -189,9 +200,9 @@ public class Triangle
     /// <param name="pThree">Particle three</param>
     public Triangle(Particle pOne, Particle pTwo, Particle pThree)
     {
-        this.p1 = pOne;
-        this.p2 = pTwo;
-        this.p3 = pThree;
+        p1 = pOne;
+        p2 = pTwo;
+        p3 = pThree;
     }
 
     /// <summary>
@@ -200,15 +211,15 @@ public class Triangle
     /// <param name="air">Vector3 air</param>
     public void ComputeAd(Vector3 air)
     {
-        Vector3 surface = (this.p1.Velocity + this.p2.Velocity + this.p3.Velocity) / 3;
-        this.averageV = surface - air;
-        this.surfnorm = Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position) /
-        Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position).magnitude;
-        float ao = (1f / 2f) * Vector3.Cross(this.p2.Position - this.p1.Position, this.p3.Position - this.p1.Position).magnitude;
-        this.areaTri = ao * (Vector3.Dot(this.averageV, this.surfnorm) / this.averageV.magnitude);
-        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(this.averageV.magnitude, 2) * 1f * this.areaTri * this.surfnorm;
-        this.p1.AddForce(aeroForce / 3);
-        this.p2.AddForce(aeroForce / 3);
-        this.p3.AddForce(aeroForce / 3);      
+        Vector3 surface = (p1.Velocity + p2.Velocity + p3.Velocity) / 3;
+        averageV = surface - air;
+        surfnorm = Vector3.Cross(p2.Position - p1.Position, p3.Position - p1.Position) /
+        Vector3.Cross(p2.Position - p1.Position, p3.Position - p1.Position).magnitude;
+        float ao = (1f / 2f) * Vector3.Cross(p2.Position - p1.Position, p3.Position - p1.Position).magnitude;
+        areaTri = ao * (Vector3.Dot(averageV, surfnorm) / averageV.magnitude);
+        Vector3 aeroForce = -(1f / 2f) * 1f * Mathf.Pow(averageV.magnitude, 2) * 1f * areaTri * surfnorm;
+        p1.AddForce(aeroForce / 3);
+        p2.AddForce(aeroForce / 3);
+        p3.AddForce(aeroForce / 3);      
     }
 }

@@ -35,13 +35,15 @@ public class ClothSim : MonoBehaviour
     [Range(3f, 10f)]
     public float Lo;
 
+    
+
     public float Gravity = 5f;
 
     /// <summary>
     /// Creates a float Slider
     /// </summary>
     [Range(0.0f, 10)]
-    public float slider = 0;
+    public float Slider = 0;
 
     /// <summary>
     /// Creates a private float windz
@@ -178,15 +180,15 @@ public class ClothSim : MonoBehaviour
     /// </summary>
     public void LateUpdate()
     {
-        Particles[0].Position = new Vector3(slider, 0, 0);
+        Particles[0].Position = new Vector3(Slider, 0, 0);
         foreach (SpringDamper sd in SpringDampers)
-        { 
-            //////Values of slider
-            //Ks = slider_KS.value;
-            //Kd = slider_KD.value;
-            //Lo = slider_LO.value;
-            ////windz = Wind.value;
-        } 
+        {
+            ////Values of slider
+            Ks = slider_KS.value;
+            Kd = slider_KD.value;
+            Lo = slider_LO.value;
+            windz = slider_WIND.value;
+        }
     }
     
     /// <summary>
@@ -210,7 +212,30 @@ public class ClothSim : MonoBehaviour
      
             sd.ComputeForce();
             ////sd.Draw();
-           
+
+            if (sd.L > 30)
+            {
+                SpringDampers.Remove(sd);
+                foreach (MonoSpring ms in FindObjectsOfType<MonoSpring>())
+                {
+                    if (ms.springDamper == sd)
+                    {
+                        ms.GetComponent<LineRenderer>().SetWidth(0, 0);
+                        {
+                            if (ms.springDamper.p1.Click)
+                            {
+                                this.Particles.Remove(ms.springDamper.p2);
+                            }
+                            if (ms.springDamper.p2.Click)
+                            {
+                                this.Particles.Remove(ms.springDamper.p2);
+                            }
+                            Destroy(ms.gameObject);
+                        }
+                    }
+                }
+            }
+
         }
 
         foreach (Triangle t in AeroDynamics)
@@ -278,25 +303,25 @@ public class ClothSim : MonoBehaviour
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
-        
+
     }
     
     /// <summary>
-    ///// Function that sets slider values
-    ///// </summary>
-    //public void SetSliders()
-    //{
+    /// Function that sets slider values
+    /// </summary>
+    public void SetSliders()
+    {
 
-    //    slider_KS.value = 10f;
-    //    slider_KD.value = 10f;
-    //    slider_LO.value = 10f;
-    //    slider_WIND.value = 10f;
+        slider_KS.value = 10f;
+        slider_KD.value = 10f;
+        slider_LO.value = 10f;
+        slider_WIND.value = 10f;
 
-    //    Ks = slider_KS.value;
-    //    Kd = slider_KD.value;
-    //    Lo = slider_LO.value;
-    //    windz = slider_WIND.value;
-    //}
+        Ks = slider_KS.value;
+        Kd = slider_KD.value;
+        Lo = slider_LO.value;
+        windz = slider_WIND.value;
+    }
 }
 
 
