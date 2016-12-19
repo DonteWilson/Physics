@@ -10,12 +10,19 @@ public class SA : MonoBehaviour {
     public float steeringF;
     public float radius;
 
-    void Start()
+    /// <summary>
+    /// Start function
+    /// </summary>
+    public void Start()
     {
         m = gameObject.GetComponent<MonoB>();
     }
 
-    void FixedUpdate()
+
+    /// <summary>
+    /// Fixed Update
+    /// </summary>
+    public void FixedUpdate()
     {
         float pushbackFactor = (target.position - transform.position).magnitude / radius;
         Vector3 pushBackForce = (target.position - transform.position).normalized * pushbackFactor;
@@ -24,7 +31,5 @@ public class SA : MonoBehaviour {
 
         if (m.boid.velocity.magnitude > 3)
             m.boid.velocity = m.boid.velocity.normalized;
-    }
-	
-	
+    }		
 }

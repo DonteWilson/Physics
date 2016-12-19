@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class Rules : MonoBehaviour {
 
+    /// <summary>
+    /// Public list Boids
+    /// </summary>
     public List<BB> boids;
 
     public GameObject prefab;
@@ -18,23 +21,40 @@ public class Rules : MonoBehaviour {
     public float mMax;
     public float mMin;
 
-    
-
+   /// <summary>
+   /// Public float Cohesion
+   /// </summary>
     [Range(0.0f, 5.00f)]
     public float cohesion;
 
+    /// <summary>
+    /// Public float dispersion
+    /// </summary>
     [Range(0.0f, 5.00f)]
     public float dispersion;
 
+    /// <summary>
+    /// Public float alignment
+    /// </summary>
     [Range(0.0f, 5.00f)]
     public float alignment;
-
+    
+    /// <summary>
+    /// Public float tendency
+    /// </summary>
     [Range(-1.0f,1.0f)]
     public float tendency;
 
+    /// <summary>
+    /// Public float slider
+    /// </summary>
     [Range(0.0f, 5.00f)]
     public float slider = 0;
 
+
+    /// <summary>
+    /// Public float limit
+    /// </summary>
     [Range(0.0f, 2.0f)]
     public float lim;
 
@@ -47,6 +67,11 @@ public class Rules : MonoBehaviour {
     public Slider slider_Separ;
     public Slider slider_Limit;
 
+
+    /// <summary>
+    /// Clamp Velocity Function
+    /// </summary>
+    /// <param name="vec">Vector Clamp</param>
     public void CV(Vector3 vec)
     {
         vec.x = Mathf.Clamp(vec.x, 0, 1);
@@ -54,6 +79,10 @@ public class Rules : MonoBehaviour {
         vec.z = Mathf.Clamp(vec.z, 0, 1);
     }
 
+
+    /// <summary>
+    /// Late Update Function
+    /// </summary>
     public void LateUpdate()
     {
         foreach(BB bb in boids)
@@ -67,6 +96,9 @@ public class Rules : MonoBehaviour {
 
     }
 
+    /// <summary>
+    /// Awake Function
+    /// </summary>
     public void Awake()
     {
  
@@ -90,7 +122,9 @@ public class Rules : MonoBehaviour {
         }
     }
 
-
+    /// <summary>
+    /// Fixed Update Function
+    /// </summary>
     public void FixedUpdate()
     {
         foreach (BB bb in boids)
@@ -108,7 +142,13 @@ public class Rules : MonoBehaviour {
         //center.position = SetCenter();
     }
 
-    //Rule 1 Center of Mass
+    ////Rule 1 Center of Mass
+   
+    /// <summary>
+    /// Vector 3 Cohesion
+    /// </summary>
+    /// <param name="b">boid list</param>
+    /// <returns></returns>
     public Vector3 Cohesion(BB b)
     {
         Vector3 pc = Vector3.zero;
@@ -125,6 +165,13 @@ public class Rules : MonoBehaviour {
        return (pc - b.transform.position).normalized;
     }
     //Rule 2 Dispersion
+
+
+    /// <summary>
+    /// Dispersion Vector 3
+    /// </summary>
+    /// <param name="b">Boids in list</param>
+    /// <returns> return avoid normalized</returns>
     public Vector3 Dispersion(BB b)
     {
         Vector3 avoid = Vector3.zero;
@@ -138,6 +185,12 @@ public class Rules : MonoBehaviour {
         return avoid.normalized;
     }
 
+
+    /// <summary>
+    /// Alignment Vector 3
+    /// </summary>
+    /// <param name="b">Boid in lsit</param>
+    /// <returns>returns rule 3</returns>
     public Vector3 Alignment(BB b)
     {
         Vector3 pv = Vector3.zero;
@@ -153,6 +206,11 @@ public class Rules : MonoBehaviour {
         return rule3;       
     }
 
+    /// <summary>
+    /// Sets the boundaries
+    /// </summary>
+    /// <param name="b">boids in list</param>
+    /// <returns>returns boundaries position</returns>
     public Vector3 BoundPosition(BB b)
     {
         Vector3 BPos = new Vector3();
@@ -177,6 +235,10 @@ public class Rules : MonoBehaviour {
         return BPos;
     }
 
+    /// <summary>
+    /// Sets the center of mass
+    /// </summary>
+    /// <returns>returns center of mass</returns>
     public Vector3 SetCenter()
     {
         Vector3 centermass = Vector3.zero;
@@ -197,6 +259,11 @@ public class Rules : MonoBehaviour {
 
     //}
 
+
+    /// <summary>
+    /// Limits the velocity
+    /// </summary>
+    /// <param name="bb">checks boid list</param>
     public void Limit(BB bb)
     {
         if (bb.velocity.magnitude > lim)
@@ -205,11 +272,19 @@ public class Rules : MonoBehaviour {
         }
     }
 
+
+    /// <summary>
+    /// Reloads the Scene
+    /// </summary>
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
     }
 
+
+    /// <summary>
+    /// Sets the sliders
+    /// </summary>
     public void SetSliders()
     {
         slider_Cohe.value = 10f;
