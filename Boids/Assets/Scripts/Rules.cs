@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Rules : MonoBehaviour {
 
@@ -19,26 +20,51 @@ public class Rules : MonoBehaviour {
 
     
 
-    [Range(0.0f, 1.0f)]
+    [Range(0.0f, 5.00f)]
     public float cohesion;
 
-    [Range(0.0f, 1.0f)]
+    [Range(0.0f, 5.00f)]
     public float dispersion;
 
-    [Range(0.0f, 1.0f)]
+    [Range(0.0f, 5.00f)]
     public float alignment;
 
     [Range(-1.0f,1.0f)]
     public float tendency;
 
+    [Range(0.0f, 5.00f)]
+    public float slider = 0;
+
     [Range(0.0f, 2.0f)]
     public float lim;
+
+
+    /// <summary>
+    /// /Slider variables
+    /// </summary>
+    public Slider slider_Cohe;
+    public Slider slider_Align;
+    public Slider slider_Separ;
+    public Slider slider_Limit;
 
     public void CV(Vector3 vec)
     {
         vec.x = Mathf.Clamp(vec.x, 0, 1);
         vec.y = Mathf.Clamp(vec.y, 0, 1);
         vec.z = Mathf.Clamp(vec.z, 0, 1);
+    }
+
+    public void LateUpdate()
+    {
+        foreach(BB bb in boids)
+        {
+
+            cohesion = slider_Cohe.value;
+            dispersion = slider_Separ.value;
+            alignment = slider_Align.value;
+
+        }
+
     }
 
     public void Awake()
@@ -63,6 +89,7 @@ public class Rules : MonoBehaviour {
             boids.Add(bb);
         }
     }
+
 
     public void FixedUpdate()
     {
@@ -123,9 +150,7 @@ public class Rules : MonoBehaviour {
         Vector3 rule3 = (pv - b.velocity).normalized;
 
 
-        return rule3;
-
-        
+        return rule3;       
     }
 
     public Vector3 BoundPosition(BB b)
@@ -183,5 +208,18 @@ public class Rules : MonoBehaviour {
     public void ReloadScene()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void SetSliders()
+    {
+        slider_Cohe.value = 10f;
+        slider_Align.value = 10f;
+        slider_Separ.value = 10f;
+        slider_Limit.value = 10f;
+
+        cohesion = slider_Cohe.value;
+        alignment = slider_Align.value;
+        dispersion = slider_Separ.value;
+        lim = slider_Limit.value;
     }
 }
