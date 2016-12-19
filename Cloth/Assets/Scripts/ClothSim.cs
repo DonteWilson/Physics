@@ -179,14 +179,13 @@ public class ClothSim : MonoBehaviour
     public void LateUpdate()
     {
         Particles[0].Position = new Vector3(Slider, 0, 0);
-        foreach (SpringDamper sd in SpringDampers)
-        {
+    
             ////Values of slider
             Ks = slider_KS.value;
             Kd = slider_KD.value;
             Lo = slider_LO.value;
             windz = slider_WIND.value;
-        }
+    
     }
     
     /// <summary>
@@ -207,7 +206,11 @@ public class ClothSim : MonoBehaviour
 
         foreach (SpringDamper sd in SpringDampers)
         {
-     
+
+            sd.Ks = slider_KS.value;
+            sd.Kd = slider_KD.value;
+            sd.Lo = slider_LO.value;
+            
             sd.ComputeForce();
             ////sd.Draw();
 
@@ -238,6 +241,7 @@ public class ClothSim : MonoBehaviour
 
         foreach (Triangle t in AeroDynamics)
         {
+            t.windCoeff = slider_WIND.value;
             t.ComputeAd(Vector3.forward * windz);
             if (slider_WIND)
             {
@@ -303,23 +307,7 @@ public class ClothSim : MonoBehaviour
         SceneManager.LoadScene(0);
 
     }
-    
-    /// <summary>
-    /// Function that sets slider values
-    /// </summary>
-    public void SetSliders()
-    {
 
-        slider_KS.value = 10f;
-        slider_KD.value = 10f;
-        slider_LO.value = 10f;
-        slider_WIND.value = 10f;
-
-        Ks = slider_KS.value;
-        Kd = slider_KD.value;
-        Lo = slider_LO.value;
-        windz = slider_WIND.value;
-    }
 }
 
 
