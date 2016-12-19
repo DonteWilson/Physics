@@ -35,8 +35,6 @@ public class ClothSim : MonoBehaviour
     [Range(3f, 10f)]
     public float Lo;
 
-    
-
     public float Gravity = 5f;
 
     /// <summary>

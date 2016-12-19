@@ -8,7 +8,7 @@ public class BB : MonoBehaviour {
 
     public float mass;
 
-    void LateUpdate()
+    public void LateUpdate()
     {
         transform.position += velocity;
         transform.forward = velocity.normalized;

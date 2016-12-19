@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Target : MonoBehaviour
@@ -57,5 +58,5 @@ public class Target : MonoBehaviour
             sa.target = gameObject.transform;
             sa.steeringF = steeringB;
         }
-    }
+    }  
 }

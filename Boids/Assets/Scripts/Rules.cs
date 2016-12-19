@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class Rules : MonoBehaviour {
 
@@ -177,5 +178,10 @@ public class Rules : MonoBehaviour {
         {
             bb.velocity = (bb.velocity / (bb.velocity.magnitude) * lim).normalized;
         }
+    }
+
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(0);
     }
 }
